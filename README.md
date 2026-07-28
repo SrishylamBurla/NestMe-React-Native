@@ -97,9 +97,9 @@ Our goal is to deliver a platform that users trust, enjoy, and return to wheneve
 
 ---
 
-# **NestMe isn't just helping people find houses.**
+  **NestMe isn't just helping people find houses.**
+  **We're helping people find where their next chapter begins.** 🏡✨
 
-# **We're helping people find where their next chapter begins.** 🏡✨
 
 # NestMe Production Deployment Guide
 
