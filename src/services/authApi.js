@@ -1,0 +1,81 @@
+import { api } from "./api";
+export const authApi = api.injectEndpoints({
+  endpoints: (builder) => ({
+    register: builder.mutation({
+      query: (data) => ({
+        url: "/auth/register",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["User"]
+    }),
+
+    login: builder.mutation({
+      query: (data) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["User"]
+    }),
+
+    googleLogin: builder.mutation({
+  query: (data) => ({
+    url: "/auth/google-mobile",
+    method: "POST",
+    body: data,
+  }),
+  invalidatesTags: ["User"],
+}),
+
+    logout: builder.mutation({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
+      invalidatesTags: ["User"]
+
+    }),
+
+    getMe: builder.query({
+      query: () => "/auth/me",
+      providesTags: ["User"],
+    }),
+
+    getMyProperties: builder.query({
+      query: () => "/auth/properties",
+      providesTags: ["Property"],
+    }),
+
+    getMyLeads: builder.query({
+      query: () => "/auth/leads",
+      providesTags: ["UserLeads"],
+    }),
+
+    getMyEnquiries: builder.query({
+      query: () => "/auth/enquiries",
+      providesTags: ["Enquiries"],
+    }),
+
+     saveFcmToken: builder.mutation({
+      query: (data) => ({
+        url: "/profile/fcm-token",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+  }),
+});
+
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useLogoutMutation,
+  useGetMeQuery,
+  useGetMyPropertiesQuery,
+  useGetMyLeadsQuery,
+  useGetMyEnquiriesQuery,
+  useGoogleLoginMutation,
+  useSaveFcmTokenMutation,
+} = authApi;

@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "97785357490",
+    "project_id": "nestme-18df7",
+    "storage_bucket": "nestme-18df7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97785357490:android:37a8d50dcfe90f540155ab",
+        "android_client_info": {
+          "package_name": "com.nestme.realestate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "97785357490-s59o4gq1egmrg56g7spn2qlgj4dqvlj6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAk0Wuyt_lzPgWoRd5M6cZl6wMcJFE4xc4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "97785357490-s59o4gq1egmrg56g7spn2qlgj4dqvlj6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97785357490:android:02b7be8f6978732f0155ab",
+        "android_client_info": {
+          "package_name": "com.nestmemobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "97785357490-s59o4gq1egmrg56g7spn2qlgj4dqvlj6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAk0Wuyt_lzPgWoRd5M6cZl6wMcJFE4xc4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "97785357490-s59o4gq1egmrg56g7spn2qlgj4dqvlj6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
