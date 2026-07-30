@@ -9,6 +9,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import SearchBar from './SearchBar';
 import { useNavigation } from '@react-navigation/native';
+import { Fonts } from '../../../theme/fonts';
 
 const PURPOSES = [
   { label: 'Buy', value: 'sale' },
@@ -26,7 +27,20 @@ export default function HeroSection() {
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      <Text style={styles.title}>Find Your Perfect Property</Text>
+      <Text
+        style={[
+          styles.title,
+          {
+            fontFamily: Fonts.Manrope.extrabold,
+          },
+        ]}
+      >
+        Find Your Perfect Property
+      </Text>
+      {/* <Text style={{
+    fontFamily: Fonts.Manrope.extrabold,
+    fontSize: 28,
+  }}>Find Your Perfect Property</Text> */}
 
       <Text style={styles.subtitle}>
         Buy, Rent or Lease verified homes across India
@@ -80,7 +94,6 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: '700',
     textAlign: 'center',
-    fontFamily: "Montserrat",
   },
 
   subtitle: {

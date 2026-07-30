@@ -12,27 +12,28 @@ import RootNavigator from './src/navigation/RootNavigator';
 import { navigate } from './src/navigation/NavigationService';
 import { PermissionsAndroid, Platform } from 'react-native';
 import { notificationApi } from './src/services/notificationApi';
+import { GOOGLE_CLIENT_ID } from '@env';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   async function requestNotificationPermission() {
+    store.dispatch(
+      notificationApi.util.invalidateTags(['Notifications', 'Notification']),
+    );
     if (Platform.OS === 'android' && Platform.Version >= 33) {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
       );
-
-      console.log('Notification permission:', granted);
     }
   }
   // Google Sign-In & Splash
   useEffect(() => {
     requestNotificationPermission();
+
     GoogleSignin.configure({
-      webClientId:
-        '649361346808-ivtqedvt2ss5fldilbvjb25imcvruk2o.apps.googleusercontent.com',
+      webClientId: GOOGLE_CLIENT_ID,
       offlineAccess: false,
     });
-
     const timer = setTimeout(() => {
       setShowSplash(false);
     }, 2000);
@@ -44,9 +45,10 @@ export default function App() {
   useEffect(() => {
     // Foreground notification
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('📩 Foreground:', remoteMessage);
 
-      store.dispatch(notificationApi.util.invalidateTags(['Notifications']));
+      store.dispatch(
+        notificationApi.util.invalidateTags(['Notifications', 'Notification']),
+      );
 
       await showNotification(
         remoteMessage.notification?.title ?? 'NestMe',
@@ -57,8 +59,12 @@ export default function App() {
     // User tapped notification while app in background
     const unsubscribeOpened = messaging().onNotificationOpenedApp(
       remoteMessage => {
-        console.log('📲 Opened from Background:', remoteMessage);
-
+        store.dispatch(
+          notificationApi.util.invalidateTags([
+            'Notifications',
+            'Notification',
+          ]),
+        );
         const { screen, propertyId } = remoteMessage.data || {};
 
         if (screen === 'PropertyDetails' && propertyId) {
@@ -74,8 +80,8 @@ export default function App() {
       const remoteMessage = await messaging().getInitialNotification();
 
       if (remoteMessage) {
-        console.log('🚀 Opened from Quit State:', remoteMessage);
-
+  
+        store.dispatch(notificationApi.util.invalidateTags(['Notifications']));
         const { screen, propertyId } = remoteMessage.data || {};
 
         if (screen === 'PropertyDetails' && propertyId) {

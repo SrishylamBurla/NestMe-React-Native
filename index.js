@@ -13,7 +13,6 @@ import { name as appName } from "./app.json";
 
 // Runs when the app is in the background or terminated
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log("📩 Background Message:", remoteMessage);
 });
 
 function Root() {

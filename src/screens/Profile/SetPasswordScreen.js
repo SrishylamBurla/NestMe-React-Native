@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 import {
   View,
@@ -9,67 +9,54 @@ import {
   StatusBar,
   ScrollView,
   ActivityIndicator,
-  Alert,
-} from "react-native";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import { useNavigation } from "@react-navigation/native";
+} from 'react-native';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+import { useSetPasswordMutation } from '../../services/userApi';
 
-import {
-  useSetPasswordMutation,
-} from "../../services/userApi";
-
-import {
-  useGetMeQuery,
-} from "../../services/authApi";
+import { useGetMeQuery } from '../../services/authApi';
 
 export default function SetPasswordScreen() {
   const navigation = useNavigation();
 
   const { refetch } = useGetMeQuery();
 
-  const [setPassword, { isLoading }] =
-    useSetPasswordMutation();
+  const [setPassword, { isLoading }] = useSetPasswordMutation();
 
-  const [password, setNewPassword] =
-    useState("");
+  const [password, setNewPassword] = useState('');
 
-  const [
-    confirmPassword,
-    setConfirmPassword,
-  ] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [
-    showPassword,
-    setShowPassword,
-  ] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [
-    showConfirmPassword,
-    setShowConfirmPassword,
-  ] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSave = async () => {
     if (!password.trim()) {
-      Alert.alert(
-        "Error",
-        "Please enter a password."
-      );
+      Toast.show({
+        type: 'error',
+        text1: 'Password Required',
+        text2: 'Please enter a password.',
+      });
       return;
     }
 
     if (password.length < 6) {
-      Alert.alert(
-        "Error",
-        "Password must be at least 6 characters."
-      );
+      Toast.show({
+        type: 'error',
+        text1: 'Weak Password',
+        text2: 'Password must be at least 6 characters.',
+      });
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert(
-        "Error",
-        "Passwords do not match."
-      );
+      Toast.show({
+        type: 'error',
+        text1: "Passwords Don't Match",
+        text2: 'Please make sure both passwords are identical.',
+      });
       return;
     }
 
@@ -81,32 +68,27 @@ export default function SetPasswordScreen() {
 
       await refetch();
 
-      Alert.alert(
-        "Success",
-        "Password created successfully.",
-        [
-          {
-            text: "OK",
-            onPress: () =>
-              navigation.goBack(),
-          },
-        ]
-      );
+      Toast.show({
+        type: 'success',
+        text1: 'Password Created',
+        text2: 'Your password has been created successfully.',
+      });
+
+      setTimeout(() => {
+        navigation.goBack();
+      }, 1000);
     } catch (err) {
-      Alert.alert(
-        "Error",
-        err?.data?.message ||
-          "Something went wrong."
-      );
+      Toast.show({
+        type: 'error',
+        text1: 'Failed',
+        text2: err?.data?.message || 'Something went wrong.',
+      });
     }
   };
 
   return (
     <>
-      <StatusBar
-        backgroundColor="#0F172A"
-        barStyle="light-content"
-      />
+      <StatusBar backgroundColor="#0F172A" barStyle="light-content" />
 
       <View style={styles.container}>
         <ScrollView
@@ -118,107 +100,61 @@ export default function SetPasswordScreen() {
           <View style={styles.header}>
             <TouchableOpacity
               style={styles.backButton}
-              onPress={() =>
-                navigation.goBack()
-              }
+              onPress={() => navigation.goBack()}
             >
-              <Ionicons
-                name="chevron-back"
-                size={22}
-                color="#fff"
-              />
+              <Ionicons name="chevron-back" size={22} color="#fff" />
             </TouchableOpacity>
 
-            <Text style={styles.headerTitle}>
-              Create Password
-            </Text>
+            <Text style={styles.headerTitle}>Create Password</Text>
 
             <View style={{ width: 42 }} />
           </View>
 
           <View style={styles.card}>
-            <Ionicons
-              name="lock-closed"
-              size={60}
-              color="#4F46E5"
-            />
+            <Ionicons name="lock-closed" size={60} color="#4F46E5" />
 
-            <Text style={styles.title}>
-              Secure Your Account
-            </Text>
+            <Text style={styles.title}>Secure Your Account</Text>
 
             <Text style={styles.subtitle}>
-              Create a password so you
-              can login using both
-              Google and Email.
+              Create a password so you can login using both Google and Email.
             </Text>
 
-            <Text style={styles.label}>
-              New Password
-            </Text>
+            <Text style={styles.label}>New Password</Text>
 
             <View style={styles.input}>
               <TextInput
                 value={password}
-                secureTextEntry={
-                  !showPassword
-                }
-                onChangeText={
-                  setNewPassword
-                }
+                secureTextEntry={!showPassword}
+                onChangeText={setNewPassword}
                 placeholder="Enter password"
                 style={styles.textInput}
               />
 
-              <TouchableOpacity
-                onPress={() =>
-                  setShowPassword(
-                    !showPassword
-                  )
-                }
-              >
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
                 <Ionicons
-                  name={
-                    showPassword
-                      ? "eye-off-outline"
-                      : "eye-outline"
-                  }
+                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                   size={22}
                   color="#64748B"
                 />
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.label}>
-              Confirm Password
-            </Text>
+            <Text style={styles.label}>Confirm Password</Text>
 
             <View style={styles.input}>
               <TextInput
                 value={confirmPassword}
-                secureTextEntry={
-                  !showConfirmPassword
-                }
-                onChangeText={
-                  setConfirmPassword
-                }
+                secureTextEntry={!showConfirmPassword}
+                onChangeText={setConfirmPassword}
                 placeholder="Confirm password"
                 style={styles.textInput}
               />
 
               <TouchableOpacity
-                onPress={() =>
-                  setShowConfirmPassword(
-                    !showConfirmPassword
-                  )
-                }
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 <Ionicons
-                  name={
-                    showConfirmPassword
-                      ? "eye-off-outline"
-                      : "eye-outline"
-                  }
+                  name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
                   size={22}
                   color="#64748B"
                 />
@@ -231,9 +167,7 @@ export default function SetPasswordScreen() {
               onPress={handleSave}
             >
               {isLoading ? (
-                <ActivityIndicator
-                  color="#fff"
-                />
+                <ActivityIndicator color="#fff" />
               ) : (
                 <>
                   <Ionicons
@@ -242,13 +176,7 @@ export default function SetPasswordScreen() {
                     color="#fff"
                   />
 
-                  <Text
-                    style={
-                      styles.buttonText
-                    }
-                  >
-                    Create Password
-                  </Text>
+                  <Text style={styles.buttonText}>Create Password</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -262,14 +190,14 @@ export default function SetPasswordScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: '#F8FAFC',
   },
 
   header: {
-    backgroundColor: "#0F172A",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    backgroundColor: '#0F172A',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingTop: StatusBar.currentHeight || 0,
     paddingBottom: 18,
     paddingHorizontal: 18,
@@ -279,83 +207,82 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor:
-      "rgba(255,255,255,0.12)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   headerTitle: {
-    color: "#fff",
-    fontWeight: "700",
+    color: '#fff',
+    fontWeight: '700',
     fontSize: 22,
   },
 
   card: {
     margin: 20,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 24,
     padding: 24,
-    alignItems: "center",
+    alignItems: 'center',
     elevation: 5,
   },
 
   title: {
     fontSize: 24,
-    fontWeight: "700",
+    fontWeight: '700',
     marginTop: 18,
-    color: "#111827",
+    color: '#111827',
   },
 
   subtitle: {
     marginTop: 12,
-    color: "#64748B",
-    textAlign: "center",
+    color: '#64748B',
+    textAlign: 'center',
     lineHeight: 22,
     marginBottom: 28,
   },
 
   label: {
-    alignSelf: "flex-start",
-    fontWeight: "700",
-    color: "#334155",
+    alignSelf: 'flex-start',
+    fontWeight: '700',
+    color: '#334155',
     marginBottom: 8,
     marginTop: 12,
   },
 
   input: {
-    width: "100%",
+    width: '100%',
     height: 56,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
+    borderColor: '#E2E8F0',
     paddingHorizontal: 16,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 14,
   },
 
   textInput: {
     flex: 1,
     fontSize: 15,
-    color: "#111827",
+    color: '#111827',
   },
 
   button: {
     marginTop: 16,
-    width: "100%",
+    width: '100%',
     height: 56,
     borderRadius: 16,
-    backgroundColor: "#4F46E5",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
+    backgroundColor: '#4F46E5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 
   buttonText: {
-    color: "#fff",
-    fontWeight: "700",
+    color: '#fff',
+    fontWeight: '700',
     fontSize: 16,
     marginLeft: 10,
   },

@@ -24,7 +24,6 @@ export default function VerticalPropertyCard({
   const [toggleSaveProperty, { isLoading: saving }] =
     useToggleSavePropertyMutation();
 
-    console.log("Property ID:", property._id);
   const goToDetails = () => {
     navigation.navigate("PropertyDetails", {
       id: property._id,
@@ -43,7 +42,7 @@ export default function VerticalPropertyCard({
     try {
       await toggleSaveProperty(property._id).unwrap();
     } catch (err) {
-      console.log("Save Property Error:", err);
+      console.error("Save Property Error:", err);
     }
   };
 

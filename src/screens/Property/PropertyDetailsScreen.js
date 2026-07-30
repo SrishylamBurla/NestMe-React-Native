@@ -31,14 +31,12 @@ export default function PropertyDetailsScreen() {
   const { id } = route.params;
 
 
-console.log(route.params);
   const {
     data: property,
     isLoading,
     error,
   } = useGetPropertyByIdQuery(id);
 
-  // console.log("PropertyId")
 
   const { data: similarData } = useGetSimilarPropertiesQuery(
     {

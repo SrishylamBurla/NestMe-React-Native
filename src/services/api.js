@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import config from "../config"
+import { API_URL } from "@env";
 
 export const api = createApi({
   reducerPath: "api",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: config.API_URL,
+    baseUrl: API_URL,
     credentials: "include",
 
     prepareHeaders: (headers) => {

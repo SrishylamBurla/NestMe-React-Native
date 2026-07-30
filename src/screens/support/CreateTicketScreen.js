@@ -1,122 +1,124 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
+} from 'react-native';
+import Toast from 'react-native-toast-message';
+import Ionicons from '@react-native-vector-icons/ionicons';
 
-import Ionicons from "@react-native-vector-icons/ionicons";
+import SupportHeader from './components/SupportHeader';
 
-import SupportHeader from "./components/SupportHeader"
-
-import { useCreateSupportTicketMutation } from "../../services/supportApi"
+import { useCreateSupportTicketMutation } from '../../services/supportApi';
 
 const CATEGORIES = [
   {
-    key: "property",
-    title: "Property",
-    icon: "home-outline",
+    key: 'property',
+    title: 'Property',
+    icon: 'home-outline',
   },
   {
-    key: "payment",
-    title: "Payment",
-    icon: "card-outline",
+    key: 'payment',
+    title: 'Payment',
+    icon: 'card-outline',
   },
   {
-    key: "verification",
-    title: "Verification",
-    icon: "shield-checkmark-outline",
+    key: 'verification',
+    title: 'Verification',
+    icon: 'shield-checkmark-outline',
   },
   {
-    key: "technical",
-    title: "Technical",
-    icon: "construct-outline",
+    key: 'technical',
+    title: 'Technical',
+    icon: 'construct-outline',
   },
   {
-    key: "account",
-    title: "Account",
-    icon: "person-outline",
+    key: 'account',
+    title: 'Account',
+    icon: 'person-outline',
   },
   {
-    key: "other",
-    title: "Other",
-    icon: "help-circle-outline",
+    key: 'other',
+    title: 'Other',
+    icon: 'help-circle-outline',
   },
 ];
 
 const PRIORITIES = [
   {
-    key: "low",
-    color: "#10B981",
+    key: 'low',
+    color: '#10B981',
   },
   {
-    key: "medium",
-    color: "#F59E0B",
+    key: 'medium',
+    color: '#F59E0B',
   },
   {
-    key: "high",
-    color: "#EF4444",
+    key: 'high',
+    color: '#EF4444',
   },
 ];
 
 const CreateTicketScreen = ({ navigation }) => {
-  const [subject, setSubject] = useState("");
+  const [subject, setSubject] = useState('');
 
-  const [category, setCategory] =
-    useState("property");
+  const [category, setCategory] = useState('property');
 
-  const [priority, setPriority] =
-    useState("medium");
+  const [priority, setPriority] = useState('medium');
 
-  const [message, setMessage] =
-    useState("");
+  const [message, setMessage] = useState('');
 
-  const [createTicket, { isLoading }] =
-    useCreateSupportTicketMutation();
+  const [createTicket, { isLoading }] = useCreateSupportTicketMutation();
 
   const submitHandler = async () => {
     if (!subject.trim()) {
-      Alert.alert(
-        "Validation",
-        "Please enter issue title."
-      );
+      Toast.show({
+        type: 'error',
+        text1: 'Issue Title Required',
+        text2: 'Please enter an issue title.',
+      });
       return;
     }
 
     if (!message.trim()) {
-      Alert.alert(
-        "Validation",
-        "Please describe your issue."
-      );
+      Toast.show({
+        type: 'error',
+        text1: 'Description Required',
+        text2: 'Please describe your issue.',
+      });
       return;
     }
 
     try {
-      const res =
-        await createTicket({
-          subject,
-          category,
-          priority,
-          message,
-        }).unwrap();
+      const res = await createTicket({
+        subject,
+        category,
+        priority,
+        message,
+      }).unwrap();
 
-      navigation.replace("SupportChat", {
+      Toast.show({
+        type: 'success',
+        text1: 'Ticket Created',
+        text2: 'Redirecting you to the support chat...',
+      });
+
+      navigation.replace('SupportChat', {
         ticketId: res.ticket._id,
       });
     } catch (err) {
-  console.log("Create Ticket Error:", JSON.stringify(err, null, 2));
+      console.error('Create Ticket Error:', err);
 
-  Alert.alert(
-    "Error",
-    err?.data?.message ||
-      "Internal Server Error"
-  );
-}
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to Create Ticket',
+        text2: err?.data?.message || 'Internal Server Error',
+      });
+    }
   };
 
   return (
@@ -125,18 +127,14 @@ const CreateTicketScreen = ({ navigation }) => {
         title="Create Ticket"
         subtitle="Tell us how we can help"
         showBack
-        onBackPress={() =>
-          navigation.goBack()
-        }
+        onBackPress={() => navigation.goBack()}
       />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
       >
-        <Text style={styles.sectionTitle}>
-          Issue Title
-        </Text>
+        <Text style={styles.sectionTitle}>Issue Title</Text>
 
         <TextInput
           value={subject}
@@ -145,43 +143,32 @@ const CreateTicketScreen = ({ navigation }) => {
           placeholderTextColor="#94A3B8"
           style={styles.input}
         />
-        <Text style={styles.sectionTitle}>
-          Category
-        </Text>
+        <Text style={styles.sectionTitle}>Category</Text>
 
         <View style={styles.categoryGrid}>
-          {CATEGORIES.map((item) => {
-            const selected =
-              category === item.key;
+          {CATEGORIES.map(item => {
+            const selected = category === item.key;
 
             return (
               <TouchableOpacity
                 key={item.key}
                 activeOpacity={0.85}
-                onPress={() =>
-                  setCategory(item.key)
-                }
+                onPress={() => setCategory(item.key)}
                 style={[
                   styles.categoryCard,
-                  selected &&
-                    styles.selectedCategory,
+                  selected && styles.selectedCategory,
                 ]}
               >
                 <Ionicons
                   name={item.icon}
                   size={26}
-                  color={
-                    selected
-                      ? "#FFFFFF"
-                      : "#5B3DF5"
-                  }
+                  color={selected ? '#FFFFFF' : '#5B3DF5'}
                 />
 
                 <Text
                   style={[
                     styles.categoryText,
-                    selected &&
-                      styles.selectedCategoryText,
+                    selected && styles.selectedCategoryText,
                   ]}
                 >
                   {item.title}
@@ -191,33 +178,23 @@ const CreateTicketScreen = ({ navigation }) => {
           })}
         </View>
 
-                <Text style={styles.sectionTitle}>
-          Priority
-        </Text>
+        <Text style={styles.sectionTitle}>Priority</Text>
 
         <View style={styles.priorityRow}>
-          {PRIORITIES.map((item) => {
-            const active =
-              priority === item.key;
+          {PRIORITIES.map(item => {
+            const active = priority === item.key;
 
             return (
               <TouchableOpacity
                 key={item.key}
-                onPress={() =>
-                  setPriority(item.key)
-                }
-                style={[
-                  styles.priorityCard,
-                  active &&
-                    styles.prioritySelected,
-                ]}
+                onPress={() => setPriority(item.key)}
+                style={[styles.priorityCard, active && styles.prioritySelected]}
               >
                 <View
                   style={[
                     styles.priorityDot,
                     {
-                      backgroundColor:
-                        item.color,
+                      backgroundColor: item.color,
                     },
                   ]}
                 />
@@ -225,23 +202,17 @@ const CreateTicketScreen = ({ navigation }) => {
                 <Text
                   style={[
                     styles.priorityText,
-                    active &&
-                      styles.prioritySelectedText,
+                    active && styles.prioritySelectedText,
                   ]}
                 >
-                  {item.key
-                    .charAt(0)
-                    .toUpperCase() +
-                    item.key.slice(1)}
+                  {item.key.charAt(0).toUpperCase() + item.key.slice(1)}
                 </Text>
               </TouchableOpacity>
             );
           })}
         </View>
 
-                <Text style={styles.sectionTitle}>
-          Describe your issue
-        </Text>
+        <Text style={styles.sectionTitle}>Describe your issue</Text>
 
         <TextInput
           value={message}
@@ -254,69 +225,40 @@ const CreateTicketScreen = ({ navigation }) => {
           style={styles.messageBox}
         />
 
-        <Text style={styles.counter}>
-          {message.length}/1000
-        </Text>
+        <Text style={styles.counter}>{message.length}/1000</Text>
 
-                <Text style={styles.sectionTitle}>
-          Attachments
-        </Text>
+        <Text style={styles.sectionTitle}>Attachments</Text>
 
         <View style={styles.attachRow}>
-          <TouchableOpacity
-            style={styles.attachCard}
-          >
-            <Ionicons
-              name="images-outline"
-              size={24}
-              color="#5B3DF5"
-            />
+          <TouchableOpacity style={styles.attachCard}>
+            <Ionicons name="images-outline" size={24} color="#5B3DF5" />
 
-            <Text style={styles.attachText}>
-              Gallery
-            </Text>
+            <Text style={styles.attachText}>Gallery</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.attachCard}
-          >
-            <Ionicons
-              name="document-text-outline"
-              size={24}
-              color="#5B3DF5"
-            />
+          <TouchableOpacity style={styles.attachCard}>
+            <Ionicons name="document-text-outline" size={24} color="#5B3DF5" />
 
-            <Text style={styles.attachText}>
-              Document
-            </Text>
+            <Text style={styles.attachText}>Document</Text>
           </TouchableOpacity>
         </View>
 
-                <TouchableOpacity
+        <TouchableOpacity
           activeOpacity={0.9}
           disabled={isLoading}
           onPress={submitHandler}
           style={styles.button}
         >
           {isLoading ? (
-            <ActivityIndicator
-              color="#FFFFFF"
-            />
+            <ActivityIndicator color="#FFFFFF" />
           ) : (
             <>
-              <Ionicons
-                name="send"
-                size={18}
-                color="#FFF"
-              />
+              <Ionicons name="send" size={18} color="#FFF" />
 
-              <Text style={styles.buttonText}>
-                Create Ticket
-              </Text>
+              <Text style={styles.buttonText}>Create Ticket</Text>
             </>
           )}
         </TouchableOpacity>
-
       </ScrollView>
     </View>
   );
@@ -327,7 +269,7 @@ export default CreateTicketScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F4F7FC",
+    backgroundColor: '#F4F7FC',
   },
 
   content: {
@@ -337,41 +279,41 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     fontSize: 16,
-    fontWeight: "700",
-    color: "#111827",
+    fontWeight: '700',
+    color: '#111827',
     marginBottom: 12,
     marginTop: 22,
   },
 
   input: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 15,
     fontSize: 15,
-    color: "#111827",
+    color: '#111827',
     borderWidth: 1,
-    borderColor: "#E2E8F0",
+    borderColor: '#E2E8F0',
   },
 
   categoryGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
 
   categoryCard: {
-    width: "31%",
-    backgroundColor: "#FFFFFF",
+    width: '31%',
+    backgroundColor: '#FFFFFF',
     borderRadius: 18,
     paddingVertical: 20,
     marginBottom: 14,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
-    borderColor: "#E2E8F0",
+    borderColor: '#E2E8F0',
 
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.04,
     shadowRadius: 8,
     shadowOffset: {
@@ -382,36 +324,36 @@ const styles = StyleSheet.create({
   },
 
   selectedCategory: {
-    backgroundColor: "#5B3DF5",
-    borderColor: "#5B3DF5",
+    backgroundColor: '#5B3DF5',
+    borderColor: '#5B3DF5',
   },
 
   categoryText: {
     marginTop: 10,
     fontSize: 13,
-    fontWeight: "600",
-    color: "#334155",
+    fontWeight: '600',
+    color: '#334155',
   },
 
   selectedCategoryText: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
   },
 
   priorityRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   priorityCard: {
-    width: "31%",
-    backgroundColor: "#FFFFFF",
+    width: '31%',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
+    borderColor: '#E2E8F0',
     paddingVertical: 16,
-    alignItems: "center",
+    alignItems: 'center',
 
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.04,
     shadowRadius: 8,
     shadowOffset: {
@@ -422,8 +364,8 @@ const styles = StyleSheet.create({
   },
 
   prioritySelected: {
-    borderColor: "#5B3DF5",
-    backgroundColor: "#EEF2FF",
+    borderColor: '#5B3DF5',
+    backgroundColor: '#EEF2FF',
   },
 
   priorityDot: {
@@ -434,47 +376,47 @@ const styles = StyleSheet.create({
   },
 
   priorityText: {
-    color: "#475569",
-    fontWeight: "600",
+    color: '#475569',
+    fontWeight: '600',
   },
 
   prioritySelectedText: {
-    color: "#5B3DF5",
+    color: '#5B3DF5',
   },
 
   messageBox: {
     minHeight: 180,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
     borderRadius: 18,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
-    color: "#111827",
+    borderColor: '#E2E8F0',
+    color: '#111827',
     fontSize: 15,
   },
 
   counter: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     marginTop: 8,
-    color: "#94A3B8",
+    color: '#94A3B8',
     fontSize: 12,
   },
 
   attachRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   attachCard: {
-    width: "48%",
-    backgroundColor: "#FFFFFF",
+    width: '48%',
+    backgroundColor: '#FFFFFF',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
+    borderColor: '#E2E8F0',
     paddingVertical: 24,
-    alignItems: "center",
+    alignItems: 'center',
 
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.04,
     shadowRadius: 8,
     shadowOffset: {
@@ -486,21 +428,21 @@ const styles = StyleSheet.create({
 
   attachText: {
     marginTop: 10,
-    color: "#334155",
-    fontWeight: "600",
+    color: '#334155',
+    fontWeight: '600',
   },
 
   button: {
     marginTop: 36,
     height: 58,
     borderRadius: 18,
-    backgroundColor: "#5B3DF5",
+    backgroundColor: '#5B3DF5',
 
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
 
-    shadowColor: "#5B3DF5",
+    shadowColor: '#5B3DF5',
     shadowOpacity: 0.25,
     shadowRadius: 10,
     shadowOffset: {
@@ -511,9 +453,9 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: '700',
     marginLeft: 10,
   },
 });

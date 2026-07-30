@@ -23,77 +23,53 @@ export default function LoginScreen() {
   const [login, { isLoading }] = useLoginMutation();
   const [googleLogin, { isLoading: googleLoading }] = useGoogleLoginMutation();
 
-  console.log('Firebase apps:', firebase.apps);
-  
   const handleLogin = async () => {
-  if (!email.trim() || !password.trim()) {
-    Toast.show({
-      type: 'error',
-      text1: 'Missing Information',
-      text2: 'Please enter your email and password.',
-    });
-    return;
-  }
-
-  try {
-    console.log('================ LOGIN START ================');
-    console.log('Email:', email.trim().toLowerCase());
-
-    const response = await login({
-      email: email.trim().toLowerCase(),
-      password,
-    }).unwrap();
-
-    console.log(
-      '✅ LOGIN SUCCESS RESPONSE:',
-      JSON.stringify(response, null, 2),
-    );
-
-    Toast.show({
-      type: 'success',
-      text1: 'Login Successful 🎉',
-      text2: `Welcome back, ${response.user?.name || 'User'}!`,
-    });
-
-    try {
-      await messaging().requestPermission();
-
-      const fcmToken = await messaging().getToken();
-
-      console.log('FCM Token:', fcmToken);
-
-      await saveFcmToken({
-        fcmToken,
-      }).unwrap();
-
-      console.log('✅ FCM token saved');
-    } catch (fcmErr) {
-      console.log(
-        '❌ FCM ERROR:',
-        JSON.stringify(fcmErr, null, 2),
-      );
+    if (!email.trim() || !password.trim()) {
+      Toast.show({
+        type: 'error',
+        text1: 'Missing Information',
+        text2: 'Please enter your email and password.',
+      });
+      return;
     }
 
-    setTimeout(() => {
-      navigation.replace('Home');
-    }, 800);
-  } catch (err) {
-    console.log(
-      '❌ LOGIN ERROR:',
-      JSON.stringify(err, null, 2),
-    );
+    try {
+      const response = await login({
+        email: email.trim().toLowerCase(),
+        password,
+      }).unwrap();
 
-    Toast.show({
-      type: 'error',
-      text1: 'Login Failed',
-      text2:
-        err?.data?.message ||
-        err?.error ||
-        'Invalid email or password.',
-    });
-  }
-};
-  
+      Toast.show({
+        type: 'success',
+        text1: 'Login Successful 🎉',
+        text2: `Welcome back, ${response.user?.name || 'User'}!`,
+      });
+
+
+      try {
+
+        const permission = await messaging().requestPermission();
+
+        const fcmToken = await messaging().getToken();
+
+        const result = await saveFcmToken({ fcmToken }).unwrap();
+      } catch (err) {
+        console.log('❌ FCM FLOW ERROR:', err);
+      }
+
+      setTimeout(() => {
+        navigation.replace('Home');
+      }, 800);
+    } catch (err) {
+      console.log('❌ LOGIN ERROR:', JSON.stringify(err, null, 2));
+
+      Toast.show({
+        type: 'error',
+        text1: 'Login Failed',
+        text2: err?.data?.message || err?.error || 'Invalid email or password.',
+      });
+    }
+  };
 
   const handleGoogleLogin = async () => {
     try {
@@ -104,7 +80,7 @@ export default function LoginScreen() {
       if (result.type !== 'success') return;
 
       const idToken = result.data.idToken;
-
+    
       const user = await googleLogin({
         idToken,
       }).unwrap();

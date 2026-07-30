@@ -1,32 +1,39 @@
-import { api } from "./api"
+import { api } from './api';
 
 export const notificationApi = api.injectEndpoints({
-  endpoints: (builder) => ({
+  endpoints: builder => ({
+    // getNotifications: builder.query({
+    //   query: () => "/notifications",
+
+    //   providesTags: ["Notification", "Notifications"],
+    // }),
     getNotifications: builder.query({
-      query: () => "/notifications",
-      providesTags: ["Notification"],
+      query: () => {
+        return '/notifications';
+      },
+      providesTags: ['Notification', 'Notifications'],
     }),
 
-
     savePushToken: builder.mutation({
-        query: (token) => ({
-          url: "/notifications/save-token",
-          method: "POST",
-          body: { token },
-        }),
+      query: token => ({
+        url: '/notifications/save-token',
+        method: 'POST',
+        body: { token },
       }),
+      invalidatesTags: ['Notification', 'Notifications'],
+    }),
 
     markRead: builder.mutation({
-      query: (id) => ({
+      query: id => ({
         url: `/notifications/${id}/read`,
-        method: "PUT",
+        method: 'PUT',
       }),
 
       // ⚡ Optimistic UI
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
-          api.util.updateQueryData("getNotifications", undefined, (draft) => {
-            const notif = draft.find((n) => n._id === id);
+          api.util.updateQueryData('getNotifications', undefined, draft => {
+            const notif = draft.find(n => n._id === id);
             if (notif) notif.isRead = true;
           }),
         );
@@ -38,7 +45,7 @@ export const notificationApi = api.injectEndpoints({
         }
       },
 
-      invalidatesTags: ["Notification"],
+      invalidatesTags: ['Notification', 'Notifications'],
     }),
   }),
 });

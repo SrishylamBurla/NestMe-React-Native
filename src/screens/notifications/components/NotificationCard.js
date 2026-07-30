@@ -31,8 +31,6 @@ export default function NotificationCard({
   const handlePress = async () => {
     try {
       setLoading(true);
-console.log("Notification:", notification);
-console.log("Entity ID:", notification.entityId);
       if (!notification.isRead) {
         await markRead(notification._id).unwrap();
       }

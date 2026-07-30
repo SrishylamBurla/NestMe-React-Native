@@ -17,6 +17,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import Carousel from "react-native-reanimated-carousel";
+import { NEXT_PUBLIC_APP_URL } from "@env";
 
 const { width } = Dimensions.get("window");
 
@@ -52,7 +53,7 @@ export default function HeroCarousel({
 
 ${property.title}
 
-https://nestme.in/properties/${property._id}`,
+${NEXT_PUBLIC_APP_URL}/properties/${property._id}`,
       });
     } catch (err) {
       console.log(err);

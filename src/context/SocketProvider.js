@@ -26,7 +26,6 @@ export function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    console.log("👤 Current User:", user);
 
     if (!user?._id) {
       if (socket) {
@@ -39,8 +38,6 @@ export function SocketProvider({ children }) {
     // Prevent duplicate connections
     if (socket?.connected) return;
 
-    console.log("🔌 Connecting to:", SOCKET_URL);
-
     const socketInstance = io(SOCKET_URL, {
       transports: ["polling", "websocket"],
       withCredentials: true,
@@ -50,17 +47,11 @@ export function SocketProvider({ children }) {
     });
 
     setSocket(socketInstance);
-
     socketInstance.on("connect", () => {
-      console.log("🟢 Socket Connected:", socketInstance.id);
-
       socketInstance.emit("join", user._id);
-      console.log("✅ Joined Room:", user._id);
     });
-
     socketInstance.on("notification", (notification) => {
-      console.log("🔔 Notification:", notification);
-
+  
       dispatch(
         notificationApi.util.updateQueryData(
           "getNotifications",
@@ -95,8 +86,6 @@ export function SocketProvider({ children }) {
     });
 
     return () => {
-      console.log("🛑 Cleaning up socket");
-
       socketInstance.removeAllListeners();
       socketInstance.disconnect();
       setSocket(null);

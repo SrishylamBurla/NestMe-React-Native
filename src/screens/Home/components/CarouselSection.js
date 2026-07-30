@@ -109,11 +109,11 @@ export default function CarouselSection({
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 22,
-    marginLeft: 12,
+    // marginTop: 22,
+    // marginLeft: 12,
     paddingLeft: 10,
-    borderTopLeftRadius: 24,
-    borderBottomLeftRadius: 24,
+    // borderTopLeftRadius: 24,
+    // borderBottomLeftRadius: 24,
     paddingVertical: 18,
     overflow: "hidden",
   },

@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Linking,
-  Alert,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,13 +19,10 @@ export default function LeadDetailsScreen({ route, navigation }) {
   const [status, setStatus] = useState(lead.status);
 
   const [updateLeadStatus, { isLoading }] = useUpdateLeadStatusMutation();
-console.log("Lead:", lead);
   const buyer = lead.user;
   const property = lead.property;
   const agent = lead.agent?.user;
 
-  console.log("Property: ", property)
-   console.log("Agent: ", agent)
 
   const updateStatus = async newStatus => {
     try {

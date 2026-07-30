@@ -16,22 +16,6 @@ export default function PropertyCard({
   property,
   onPress,
 }) {
-  // const { data } = useGetSavedPropertiesQuery();
-
-  // const [toggleSaveProperty] = useToggleSavePropertyMutation();
-
-  // const handleToggleSave = async () => {
-  //   try {
-  //     await toggleSaveProperty(property._id).unwrap();
-  //   } catch (err) {
-  //     console.log("Save failed:", err);
-  //   }
-  // };
-
-  // const isSaved =
-  //   data?.saved?.some(
-  //     (item) => item.property._id === property._id
-  //   );
 
   return (
     <Pressable

@@ -1,35 +1,27 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
 
-import PrimaryButton from "../../../components/PrimaryButton";
+import PrimaryButton from '../../../components/PrimaryButton';
+import Toast from 'react-native-toast-message';
+import { useCreateLeadMutation } from '../../../services/leadApi';
 
-import { useCreateLeadMutation } from "../../../services/leadApi";
-
-export default function ContactOwnerForm({
-  propertyId,
-}) {
-  const [createLead, { isLoading }] =
-    useCreateLeadMutation();
+export default function ContactOwnerForm({ propertyId }) {
+  const [createLead, { isLoading }] = useCreateLeadMutation();
 
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
   });
 
   const submitHandler = async () => {
     if (!propertyId) {
-      Alert.alert(
-        "Error",
-        "Property reference missing."
-      );
+      Toast.show({
+        type: 'error',
+        text1: 'Property Not Found',
+        text2: 'Property reference is missing.',
+      });
       return;
     }
 
@@ -39,44 +31,47 @@ export default function ContactOwnerForm({
         ...form,
       }).unwrap();
 
-      Alert.alert(
-        "Success",
-        "Enquiry sent successfully."
-      );
+      Toast.show({
+        type: 'success',
+        text1: 'Enquiry Sent',
+        text2: 'Your message has been sent successfully.',
+      });
 
       setForm({
-        name: "",
-        email: "",
-        phone: "",
-        message: "",
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
       });
     } catch (err) {
       if (err?.status === 401) {
-        Alert.alert(
-          "Login Required",
-          "Please login to contact the owner."
-        );
+        Toast.show({
+          type: 'error',
+          text1: 'Login Required',
+          text2: 'Please log in to contact the property owner.',
+        });
       } else {
-        Alert.alert(
-          "Failed",
-          "Unable to send enquiry."
-        );
+        Toast.show({
+          type: 'error',
+          text1: 'Failed to Send',
+          text2:
+            err?.data?.message ||
+            'Unable to send your enquiry. Please try again.',
+        });
       }
     }
   };
 
   return (
     <View style={styles.card}>
-      <Text style={styles.heading}>
-        Contact Property Owner
-      </Text>
+      <Text style={styles.heading}>Contact Property Owner</Text>
 
       <TextInput
         placeholder="Your Name"
         placeholderTextColor="#94A3B8"
         style={styles.input}
         value={form.name}
-        onChangeText={(text) =>
+        onChangeText={text =>
           setForm({
             ...form,
             name: text,
@@ -90,7 +85,7 @@ export default function ContactOwnerForm({
         style={styles.input}
         keyboardType="email-address"
         value={form.email}
-        onChangeText={(text) =>
+        onChangeText={text =>
           setForm({
             ...form,
             email: text,
@@ -104,7 +99,7 @@ export default function ContactOwnerForm({
         style={styles.input}
         keyboardType="phone-pad"
         value={form.phone}
-        onChangeText={(text) =>
+        onChangeText={text =>
           setForm({
             ...form,
             phone: text,
@@ -119,7 +114,7 @@ export default function ContactOwnerForm({
         placeholderTextColor="#94A3B8"
         style={styles.message}
         value={form.message}
-        onChangeText={(text) =>
+        onChangeText={text =>
           setForm({
             ...form,
             message: text,
@@ -128,11 +123,7 @@ export default function ContactOwnerForm({
       />
 
       <PrimaryButton
-        title={
-          isLoading
-            ? "Sending..."
-            : "Send Message"
-        }
+        title={isLoading ? 'Sending...' : 'Send Message'}
         onPress={submitHandler}
         disabled={isLoading}
       />
@@ -142,13 +133,13 @@ export default function ContactOwnerForm({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     marginHorizontal: 18,
     marginTop: 18,
     borderRadius: 22,
     padding: 18,
 
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.08,
     shadowRadius: 15,
     shadowOffset: {
@@ -161,31 +152,31 @@ const styles = StyleSheet.create({
 
   heading: {
     fontSize: 20,
-    fontWeight: "700",
-    color: "#111827",
+    fontWeight: '700',
+    color: '#111827',
     marginBottom: 18,
   },
 
   input: {
     height: 52,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: '#E5E7EB',
     borderRadius: 14,
     paddingHorizontal: 16,
     marginBottom: 14,
-    backgroundColor: "#fff",
-    color: "#111827",
+    backgroundColor: '#fff',
+    color: '#111827',
   },
 
   message: {
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: '#E5E7EB',
     borderRadius: 14,
     padding: 16,
     minHeight: 120,
-    textAlignVertical: "top",
+    textAlignVertical: 'top',
     marginBottom: 20,
-    backgroundColor: "#fff",
-    color: "#111827",
+    backgroundColor: '#fff',
+    color: '#111827',
   },
 });

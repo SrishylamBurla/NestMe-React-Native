@@ -18,7 +18,6 @@ export default function PropertiesScreen() {
 
   const { propertyType = '' } = route.params || {};
 
-  console.log(route.params);
   const [filters, setFilters] = useState({
     page: 1,
     limit: 12,

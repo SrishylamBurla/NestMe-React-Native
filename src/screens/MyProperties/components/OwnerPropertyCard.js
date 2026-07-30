@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,20 +8,14 @@ import {
   Modal,
   Pressable,
   ActivityIndicator,
-  Alert,
-} from "react-native";
+} from 'react-native';
+import Toast from "react-native-toast-message";
+import Ionicons from '@react-native-vector-icons/ionicons';
+import { useNavigation } from '@react-navigation/native';
 
-import Ionicons from "@react-native-vector-icons/ionicons";
-import { useNavigation } from "@react-navigation/native";
+import { useDeletePropertyMutation } from '../../../services/propertyApi';
 
-import {
-  useDeletePropertyMutation,
-} from "../../../services/propertyApi";
-
-export default function OwnerPropertyCard({
-  property,
-  isAgent = false,
-}) {
+export default function OwnerPropertyCard({ property, isAgent = false }) {
   const navigation = useNavigation();
 
   const [deleteProperty] = useDeletePropertyMutation();
@@ -41,21 +35,18 @@ export default function OwnerPropertyCard({
   ========================== */
 
   const statusColor =
-    property.approvalStatus === "approved"
-      ? "#22C55E"
-      : property.approvalStatus === "pending"
-      ? "#F59E0B"
-      : "#EF4444";
+    property.approvalStatus === 'approved'
+      ? '#22C55E'
+      : property.approvalStatus === 'pending'
+      ? '#F59E0B'
+      : '#EF4444';
 
   /* ==========================
       CARD CLICK
   ========================== */
 
   const handleCardPress = () => {
-    if (
-      property.approvalStatus !==
-      "approved"
-    ) {
+    if (property.approvalStatus !== 'approved') {
       setShowBlocked(true);
 
       setTimeout(() => {
@@ -65,12 +56,9 @@ export default function OwnerPropertyCard({
       return;
     }
 
-    navigation.navigate(
-      "PropertyDetails",
-      {
-        id: property._id,
-      }
-    );
+    navigation.navigate('PropertyDetails', {
+      id: property._id,
+    });
   };
 
   /* ==========================
@@ -78,34 +66,33 @@ export default function OwnerPropertyCard({
   ========================== */
 
   const handleEdit = () => {
-    navigation.navigate("EditProperty", {
-    propertyId: property._id,
-});
+    navigation.navigate('EditProperty', {
+      propertyId: property._id,
+    });
   };
 
   /* ==========================
       DELETE
   ========================== */
 
-  const handleDelete =
-    async () => {
-      try {
-        setIsDeleting(true);
+  const handleDelete = async () => {
+    try {
+      setIsDeleting(true);
 
-        await deleteProperty(
-          property._id
-        ).unwrap();
+      await deleteProperty(property._id).unwrap();
 
-        setDeleteVisible(false);
-      } catch (e) {
-        Alert.alert(
-          "Error",
-          "Failed to delete property."
-        );
-      } finally {
-        setIsDeleting(false);
-      }
-    };
+      setDeleteVisible(false);
+    } catch (err) {
+      Toast.show({
+        type: 'error',
+        text1: 'Delete Failed',
+        text2:
+          err?.data?.message || err?.message || 'Failed to delete property.',
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <>
@@ -121,35 +108,22 @@ export default function OwnerPropertyCard({
         {/* BLOCKED */}
 
         {showBlocked && (
-          <View
-            style={styles.blockedOverlay}
-          >
-            <Text
-              style={
-                styles.blockedText
-              }
-            >
-              {property.approvalStatus ===
-              "pending"
-                ? "Under Review ⏳"
-                : "Rejected ❌"}
+          <View style={styles.blockedOverlay}>
+            <Text style={styles.blockedText}>
+              {property.approvalStatus === 'pending'
+                ? 'Under Review ⏳'
+                : 'Rejected ❌'}
             </Text>
           </View>
         )}
 
         {/* IMAGE */}
 
-        <View
-          style={
-            styles.imageContainer
-          }
-        >
+        <View style={styles.imageContainer}>
           <Image
             source={{
               uri:
-                property.images?.[0]
-                  ?.url ||
-                "https://via.placeholder.com/800",
+                property.images?.[0]?.url || 'https://via.placeholder.com/800',
             }}
             style={styles.image}
           />
@@ -160,311 +134,117 @@ export default function OwnerPropertyCard({
             style={[
               styles.statusBadge,
               {
-                backgroundColor:
-                  statusColor,
+                backgroundColor: statusColor,
               },
             ]}
           >
-            <Text
-              style={
-                styles.statusText
-              }
-            >
-              {
-                property.approvalStatus
-              }
-            </Text>
+            <Text style={styles.statusText}>{property.approvalStatus}</Text>
           </View>
 
           {/* PRICE */}
 
-          <View
-            style={styles.priceChip}
-          >
-            <Text
-              style={
-                styles.price
-              }
-            >
-              ₹{" "}
-              {property.priceValue?.toLocaleString()}
+          <View style={styles.priceChip}>
+            <Text style={styles.price}>
+              ₹ {property.priceValue?.toLocaleString()}
             </Text>
           </View>
         </View>
 
         {/* CONTENT */}
 
-        <View
-          style={
-            styles.content
-          }
-        >
-          <Text
-            numberOfLines={1}
-            style={styles.title}
-          >
+        <View style={styles.content}>
+          <Text numberOfLines={1} style={styles.title}>
             {property.title}
           </Text>
 
-          <Text
-            numberOfLines={1}
-            style={
-              styles.location
-            }
-          >
-            {property.city},{" "}
-            {property.state}
+          <Text numberOfLines={1} style={styles.location}>
+            {property.city}, {property.state}
           </Text>
 
           {/* REJECTED */}
 
-          {property.approvalStatus ===
-            "rejected" &&
+          {property.approvalStatus === 'rejected' &&
             property.rejectionReason && (
-              <View
-                style={
-                  styles.rejectBox
-                }
-              >
-                <Text
-                  style={
-                    styles.rejectTitle
-                  }
-                >
-                  Admin Feedback
-                </Text>
+              <View style={styles.rejectBox}>
+                <Text style={styles.rejectTitle}>Admin Feedback</Text>
 
-                <Text
-                  style={
-                    styles.rejectReason
-                  }
-                >
-                  {
-                    property.rejectionReason
-                  }
+                <Text style={styles.rejectReason}>
+                  {property.rejectionReason}
                 </Text>
               </View>
             )}
 
           {/* META */}
 
-          <View
-            style={
-              styles.metaRow
-            }
-          >
-            <View
-              style={
-                styles.meta
-              }
-            >
-              <Ionicons
-                name="bed-outline"
-                size={18}
-                color="#475569"
-              />
+          <View style={styles.metaRow}>
+            <View style={styles.meta}>
+              <Ionicons name="bed-outline" size={18} color="#475569" />
 
-              <Text
-                style={
-                  styles.metaText
-                }
-              >
-                {property.beds}
-              </Text>
+              <Text style={styles.metaText}>{property.beds}</Text>
             </View>
 
-            <View
-              style={
-                styles.meta
-              }
-            >
-              <Ionicons
-                name="water-outline"
-                size={18}
-                color="#475569"
-              />
+            <View style={styles.meta}>
+              <Ionicons name="water-outline" size={18} color="#475569" />
 
-              <Text
-                style={
-                  styles.metaText
-                }
-              >
-                {property.baths}
-              </Text>
+              <Text style={styles.metaText}>{property.baths}</Text>
             </View>
 
-            <View
-              style={
-                styles.meta
-              }
-            >
-              <Ionicons
-                name="resize-outline"
-                size={18}
-                color="#475569"
-              />
+            <View style={styles.meta}>
+              <Ionicons name="resize-outline" size={18} color="#475569" />
 
-              <Text
-                style={
-                  styles.metaText
-                }
-              >
-                {
-                  property.areaSqFt
-                }{" "}
-                ft²
-              </Text>
+              <Text style={styles.metaText}>{property.areaSqFt} ft²</Text>
             </View>
           </View>
 
           {/* AGENT STATS */}
 
           {isAgent && (
-            <View
-              style={
-                styles.statsRow
-              }
-            >
-              <View
-                style={
-                  styles.statCard
-                }
-              >
-                <Ionicons
-                  name="eye-outline"
-                  size={18}
-                  color="#2563EB"
-                />
+            <View style={styles.statsRow}>
+              <View style={styles.statCard}>
+                <Ionicons name="eye-outline" size={18} color="#2563EB" />
 
-                <Text
-                  style={
-                    styles.statValue
-                  }
-                >
-                  {property.viewsCount ||
-                    0}
-                </Text>
+                <Text style={styles.statValue}>{property.viewsCount || 0}</Text>
 
-                <Text
-                  style={
-                    styles.statLabel
-                  }
-                >
-                  Views
-                </Text>
+                <Text style={styles.statLabel}>Views</Text>
               </View>
 
-              <View
-                style={
-                  styles.statCard
-                }
-              >
-                <Ionicons
-                  name="people-outline"
-                  size={18}
-                  color="#7C3AED"
-                />
+              <View style={styles.statCard}>
+                <Ionicons name="people-outline" size={18} color="#7C3AED" />
 
-                <Text
-                  style={
-                    styles.statValue
-                  }
-                >
-                  {property.leadsCount ||
-                    0}
-                </Text>
+                <Text style={styles.statValue}>{property.leadsCount || 0}</Text>
 
-                <Text
-                  style={
-                    styles.statLabel
-                  }
-                >
-                  Leads
-                </Text>
+                <Text style={styles.statLabel}>Leads</Text>
               </View>
             </View>
           )}
 
           {/* ACTIONS */}
 
-          <View
-            style={
-              styles.actionRow
-            }
-          >
+          <View style={styles.actionRow}>
             {isAgent && (
-              <TouchableOpacity
-                style={
-                  styles.editButton
-                }
-                onPress={
-                  handleEdit
-                }
-              >
-                <Ionicons
-                  name="create-outline"
-                  size={18}
-                  color="#fff"
-                />
+              <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
+                <Ionicons name="create-outline" size={18} color="#fff" />
 
-                <Text
-                  style={
-                    styles.actionText
-                  }
-                >
-                  Edit
-                </Text>
+                <Text style={styles.actionText}>Edit</Text>
               </TouchableOpacity>
             )}
 
             <TouchableOpacity
-              style={
-                styles.previewButton
-              }
-              onPress={() =>
-                setPreviewVisible(
-                  true
-                )
-              }
+              style={styles.previewButton}
+              onPress={() => setPreviewVisible(true)}
             >
-              <Ionicons
-                name="eye-outline"
-                size={18}
-                color="#fff"
-              />
+              <Ionicons name="eye-outline" size={18} color="#fff" />
 
-              <Text
-                style={
-                  styles.actionText
-                }
-              >
-                Preview
-              </Text>
+              <Text style={styles.actionText}>Preview</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={
-                styles.deleteButton
-              }
-              onPress={() =>
-                setDeleteVisible(
-                  true
-                )
-              }
+              style={styles.deleteButton}
+              onPress={() => setDeleteVisible(true)}
             >
-              <Ionicons
-                name="trash-outline"
-                size={18}
-                color="#fff"
-              />
+              <Ionicons name="trash-outline" size={18} color="#fff" />
 
-              <Text
-                style={
-                  styles.actionText
-                }
-              >
-                Delete
-              </Text>
+              <Text style={styles.actionText}>Delete</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -474,35 +254,17 @@ export default function OwnerPropertyCard({
             PREVIEW MODAL
       ========================== */}
 
-      <Modal
-        visible={previewVisible}
-        transparent
-        animationType="fade"
-      >
+      <Modal visible={previewVisible} transparent animationType="fade">
         <Pressable
-          style={
-            styles.modalOverlay
-          }
-          onPress={() =>
-            setPreviewVisible(
-              false
-            )
-          }
+          style={styles.modalOverlay}
+          onPress={() => setPreviewVisible(false)}
         >
-          <Pressable
-            style={
-              styles.previewModal
-            }
-          >
+          <Pressable style={styles.previewModal}>
             <Image
               source={{
-                uri:
-                  property.images?.[0]
-                    ?.url,
+                uri: property.images?.[0]?.url,
               }}
-              style={
-                styles.previewImage
-              }
+              style={styles.previewImage}
             />
 
             <View
@@ -510,49 +272,21 @@ export default function OwnerPropertyCard({
                 padding: 18,
               }}
             >
-              <Text
-                style={
-                  styles.previewTitle
-                }
-              >
-                {property.title}
+              <Text style={styles.previewTitle}>{property.title}</Text>
+
+              <Text style={styles.previewPrice}>
+                ₹ {property.priceValue?.toLocaleString()}
               </Text>
 
-              <Text
-                style={
-                  styles.previewPrice
-                }
-              >
-                ₹{" "}
-                {property.priceValue?.toLocaleString()}
-              </Text>
-
-              <Text
-                style={
-                  styles.previewLocation
-                }
-              >
-                {property.city},{" "}
-                {property.state}
+              <Text style={styles.previewLocation}>
+                {property.city}, {property.state}
               </Text>
 
               <TouchableOpacity
-                style={
-                  styles.closeButton
-                }
-                onPress={() =>
-                  setPreviewVisible(
-                    false
-                  )
-                }
+                style={styles.closeButton}
+                onPress={() => setPreviewVisible(false)}
               >
-                <Text
-                  style={
-                    styles.closeText
-                  }
-                >
-                  Close
-                </Text>
+                <Text style={styles.closeText}>Close</Text>
               </TouchableOpacity>
             </View>
           </Pressable>
@@ -563,81 +297,37 @@ export default function OwnerPropertyCard({
             DELETE MODAL
       ========================== */}
 
-      <Modal
-        transparent
-        animationType="fade"
-        visible={deleteVisible}
-      >
+      <Modal transparent animationType="fade" visible={deleteVisible}>
         <Pressable
-          style={
-            styles.modalOverlay
-          }
-          onPress={() =>
-            setDeleteVisible(
-              false
-            )
-          }
+          style={styles.modalOverlay}
+          onPress={() => setDeleteVisible(false)}
         >
-          <Pressable
-            style={
-              styles.deleteModal
-            }
-          >
-            <Text
-              style={
-                styles.deleteTitle
-              }
-            >
-              Delete Property?
+          <Pressable style={styles.deleteModal}>
+            <Text style={styles.deleteTitle}>Delete Property?</Text>
+
+            <Text style={styles.deleteMessage}>
+              This action cannot be undone.
             </Text>
 
-            <Text
-              style={
-                styles.deleteMessage
-              }
-            >
-              This action cannot be
-              undone.
-            </Text>
-
-            <View
-              style={
-                styles.deleteButtons
-              }
-            >
+            <View style={styles.deleteButtons}>
               <TouchableOpacity
-                style={
-                  styles.cancelButton
-                }
-                onPress={() =>
-                  setDeleteVisible(
-                    false
-                  )
-                }
+                style={styles.cancelButton}
+                onPress={() => setDeleteVisible(false)}
               >
-                <Text>
-                  Cancel
-                </Text>
+                <Text>Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={
-                  styles.confirmDelete
-                }
-                onPress={
-                  handleDelete
-                }
-                disabled={
-                  isDeleting
-                }
+                style={styles.confirmDelete}
+                onPress={handleDelete}
+                disabled={isDeleting}
               >
                 {isDeleting ? (
                   <ActivityIndicator color="#fff" />
                 ) : (
                   <Text
                     style={{
-                      color:
-                        "#fff",
+                      color: '#fff',
                     }}
                   >
                     Delete
@@ -654,12 +344,12 @@ export default function OwnerPropertyCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
     borderRadius: 24,
-    overflow: "hidden",
+    overflow: 'hidden',
     marginBottom: 22,
 
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.08,
     shadowRadius: 16,
     shadowOffset: {
@@ -674,12 +364,12 @@ const styles = StyleSheet.create({
 
   imageContainer: {
     height: 220,
-    position: "relative",
+    position: 'relative',
   },
 
   image: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
 
   blockedOverlay: {
@@ -687,20 +377,20 @@ const styles = StyleSheet.create({
 
     zIndex: 100,
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
 
-    backgroundColor: "rgba(255,255,255,.92)",
+    backgroundColor: 'rgba(255,255,255,.92)',
   },
 
   blockedText: {
     fontSize: 18,
-    fontWeight: "700",
-    color: "#DC2626",
+    fontWeight: '700',
+    color: '#DC2626',
   },
 
   statusBadge: {
-    position: "absolute",
+    position: 'absolute',
 
     top: 16,
     right: 16,
@@ -712,19 +402,19 @@ const styles = StyleSheet.create({
   },
 
   statusText: {
-    color: "#fff",
-    fontWeight: "700",
-    textTransform: "capitalize",
+    color: '#fff',
+    fontWeight: '700',
+    textTransform: 'capitalize',
     fontSize: 12,
   },
 
   priceChip: {
-    position: "absolute",
+    position: 'absolute',
 
     bottom: 16,
     left: 16,
 
-    backgroundColor: "#111827",
+    backgroundColor: '#111827',
 
     borderRadius: 18,
 
@@ -733,8 +423,8 @@ const styles = StyleSheet.create({
   },
 
   price: {
-    color: "#fff",
-    fontWeight: "700",
+    color: '#fff',
+    fontWeight: '700',
     fontSize: 17,
   },
 
@@ -746,14 +436,14 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 22,
-    fontWeight: "700",
-    color: "#111827",
+    fontWeight: '700',
+    color: '#111827',
   },
 
   location: {
     marginTop: 6,
     fontSize: 15,
-    color: "#64748B",
+    color: '#64748B',
   },
 
   /* ================= REJECT ================= */
@@ -761,10 +451,10 @@ const styles = StyleSheet.create({
   rejectBox: {
     marginTop: 16,
 
-    backgroundColor: "#FEF2F2",
+    backgroundColor: '#FEF2F2',
 
     borderWidth: 1,
-    borderColor: "#FCA5A5",
+    borderColor: '#FCA5A5',
 
     borderRadius: 14,
 
@@ -772,49 +462,49 @@ const styles = StyleSheet.create({
   },
 
   rejectTitle: {
-    color: "#DC2626",
-    fontWeight: "700",
+    color: '#DC2626',
+    fontWeight: '700',
     marginBottom: 4,
   },
 
   rejectReason: {
-    color: "#991B1B",
+    color: '#991B1B',
     lineHeight: 20,
   },
 
   /* ================= META ================= */
 
   metaRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
 
     marginTop: 20,
 
     borderTopWidth: 1,
     borderBottomWidth: 1,
 
-    borderColor: "#E5E7EB",
+    borderColor: '#E5E7EB',
 
     paddingVertical: 14,
   },
 
   meta: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   metaText: {
     marginLeft: 6,
     fontSize: 14,
-    color: "#334155",
-    fontWeight: "600",
+    color: '#334155',
+    fontWeight: '600',
   },
 
   /* ================= STATS ================= */
 
   statsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
 
     marginTop: 18,
   },
@@ -824,35 +514,35 @@ const styles = StyleSheet.create({
 
     marginHorizontal: 4,
 
-    backgroundColor: "#F8FAFC",
+    backgroundColor: '#F8FAFC',
 
     borderRadius: 16,
 
-    alignItems: "center",
+    alignItems: 'center',
 
     paddingVertical: 14,
 
     borderWidth: 1,
-    borderColor: "#E2E8F0",
+    borderColor: '#E2E8F0',
   },
 
   statValue: {
     marginTop: 8,
     fontSize: 20,
-    fontWeight: "700",
-    color: "#111827",
+    fontWeight: '700',
+    color: '#111827',
   },
 
   statLabel: {
     marginTop: 4,
     fontSize: 12,
-    color: "#64748B",
+    color: '#64748B',
   },
 
   /* ================= ACTIONS ================= */
 
   actionRow: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 22,
   },
 
@@ -863,12 +553,12 @@ const styles = StyleSheet.create({
 
     borderRadius: 14,
 
-    backgroundColor: "#4F46E5",
+    backgroundColor: '#4F46E5',
 
-    flexDirection: "row",
+    flexDirection: 'row',
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
 
     marginRight: 8,
   },
@@ -880,12 +570,12 @@ const styles = StyleSheet.create({
 
     borderRadius: 14,
 
-    backgroundColor: "#111827",
+    backgroundColor: '#111827',
 
-    flexDirection: "row",
+    flexDirection: 'row',
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
 
     marginRight: 8,
   },
@@ -897,17 +587,17 @@ const styles = StyleSheet.create({
 
     borderRadius: 14,
 
-    backgroundColor: "#EF4444",
+    backgroundColor: '#EF4444',
 
-    flexDirection: "row",
+    flexDirection: 'row',
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   actionText: {
-    color: "#FFFFFF",
-    fontWeight: "700",
+    color: '#FFFFFF',
+    fontWeight: '700',
     marginLeft: 6,
   },
 
@@ -916,45 +606,45 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
 
-    backgroundColor: "rgba(0,0,0,.55)",
+    backgroundColor: 'rgba(0,0,0,.55)',
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
 
     padding: 20,
   },
 
   previewModal: {
-    width: "100%",
+    width: '100%',
 
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
 
     borderRadius: 24,
 
-    overflow: "hidden",
+    overflow: 'hidden',
   },
 
   previewImage: {
-    width: "100%",
+    width: '100%',
     height: 240,
   },
 
   previewTitle: {
     fontSize: 24,
-    fontWeight: "700",
-    color: "#111827",
+    fontWeight: '700',
+    color: '#111827',
   },
 
   previewPrice: {
     marginTop: 12,
     fontSize: 22,
-    color: "#4F46E5",
-    fontWeight: "700",
+    color: '#4F46E5',
+    fontWeight: '700',
   },
 
   previewLocation: {
     marginTop: 8,
-    color: "#64748B",
+    color: '#64748B',
     fontSize: 15,
   },
 
@@ -965,24 +655,24 @@ const styles = StyleSheet.create({
 
     borderRadius: 14,
 
-    backgroundColor: "#111827",
+    backgroundColor: '#111827',
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   closeText: {
-    color: "#fff",
-    fontWeight: "700",
+    color: '#fff',
+    fontWeight: '700',
     fontSize: 16,
   },
 
   /* ================= DELETE ================= */
 
   deleteModal: {
-    width: "100%",
+    width: '100%',
 
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
 
     borderRadius: 22,
 
@@ -991,18 +681,18 @@ const styles = StyleSheet.create({
 
   deleteTitle: {
     fontSize: 22,
-    fontWeight: "700",
-    color: "#111827",
+    fontWeight: '700',
+    color: '#111827',
   },
 
   deleteMessage: {
     marginTop: 10,
-    color: "#64748B",
+    color: '#64748B',
     lineHeight: 22,
   },
 
   deleteButtons: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 28,
   },
 
@@ -1013,10 +703,10 @@ const styles = StyleSheet.create({
 
     borderRadius: 14,
 
-    backgroundColor: "#F1F5F9",
+    backgroundColor: '#F1F5F9',
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
 
     marginRight: 10,
   },
@@ -1028,9 +718,9 @@ const styles = StyleSheet.create({
 
     borderRadius: 14,
 
-    backgroundColor: "#DC2626",
+    backgroundColor: '#DC2626',
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

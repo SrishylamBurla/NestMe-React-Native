@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
+import Toast from "react-native-toast-message";
 import LinearGradient from "react-native-linear-gradient";
 import { useCancelSubscriptionMutation } from "../../services/subscribeApi";
 import DetailRow from "./DetailRow";
@@ -37,26 +38,27 @@ const handleCancel = () => {
           try {
             await cancelSubscription().unwrap();
 
-            // Refresh subscription
             if (onRefresh) {
               await onRefresh();
             }
 
-            // Refresh logged-in user
             if (onUserRefresh) {
               await onUserRefresh();
             }
 
-            Alert.alert(
-              "Subscription Cancelled",
-              "Your account has been downgraded to a normal user.",
-            );
+            Toast.show({
+              type: "success",
+              text1: "Subscription Cancelled",
+              text2: "Your account has been downgraded to a normal user.",
+            });
           } catch (err) {
-            Alert.alert(
-              "Error",
-              err?.data?.message ||
-                "Failed to cancel subscription."
-            );
+            Toast.show({
+              type: "error",
+              text1: "Cancellation Failed",
+              text2:
+                err?.data?.message ||
+                "Failed to cancel subscription.",
+            });
           }
         },
       },

@@ -1,5 +1,6 @@
-import RazorpayCheckout from "react-native-razorpay";
-import { Alert } from "react-native";
+import RazorpayCheckout from 'react-native-razorpay';
+import Toast from 'react-native-toast-message';
+import { RAZORPAY_KEY_ID } from '@env';
 
 export async function startRazorpayPayment({
   plan,
@@ -15,23 +16,23 @@ export async function startRazorpayPayment({
     const order = await createOrder(plan).unwrap();
 
     const options = {
-      key: "rzp_test_SX6Krmlo4bHVj6", // Move to env/config
+      key: RAZORPAY_KEY_ID, // Move to env/config
       amount: order.amount,
-      currency: "INR",
+      currency: 'INR',
       order_id: order.id,
 
-      name: "NestMe",
+      name: 'NestMe',
 
       description: `${plan} Agent Subscription`,
 
       prefill: {
-        name: user?.name || "",
-        email: user?.email || "",
-        contact: user?.phone || "",
+        name: user?.name || '',
+        email: user?.email || '',
+        contact: user?.phone || '',
       },
 
       theme: {
-        color: "#4F46E5",
+        color: '#4F46E5',
       },
     };
 
@@ -48,26 +49,32 @@ export async function startRazorpayPayment({
       await refetchSubscription?.();
       await refetchUser?.();
 
-      Alert.alert(
-        "Success",
-        "Subscription Activated!"
-      );
+      Toast.show({
+        type: 'success',
+        text1: 'Subscription Activated 🎉',
+        text2: 'Welcome to your Agent plan.',
+      });
 
-      navigation.replace("AgentDashboard");
+      navigation.replace('AgentDashboard');
     }
   } catch (err) {
-    if (err?.code === 0) {
-      Alert.alert(
-        "Cancelled",
-        "Payment was cancelled."
-      );
-    } else {
-      Alert.alert(
-        "Payment Failed",
+  console.error("Razorpay Payment Error:", err);
+
+  if (err?.code === 0) {
+    Toast.show({
+      type: "info",
+      text1: "Payment Cancelled",
+      text2: "You cancelled the payment.",
+    });
+  } else {
+    Toast.show({
+      type: "error",
+      text1: "Payment Failed",
+      text2:
         err?.description ||
-          err?.data?.message ||
-          "Something went wrong."
-      );
-    }
+        err?.data?.message ||
+        "Something went wrong. Please try again.",
+    });
   }
+}
 }

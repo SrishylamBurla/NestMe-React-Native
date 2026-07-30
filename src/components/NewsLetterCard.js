@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,35 +6,38 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  Alert,
-} from "react-native";
+} from 'react-native';
+import Toast from 'react-native-toast-message';
+import LinearGradient from 'react-native-linear-gradient';
+import Ionicons from '@react-native-vector-icons/ionicons';
 
-import LinearGradient from "react-native-linear-gradient";
-import Ionicons from "@react-native-vector-icons/ionicons";
-
-import { useSubscribeMutation } from "../services/subscribeApi"
+import { useSubscribeMutation } from '../services/subscribeApi';
 
 export default function NewsletterCard() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
 
-  const [subscribe, { isLoading }] =
-    useSubscribeMutation();
+  const [subscribe, { isLoading }] = useSubscribeMutation();
+  
   const handleSubscribe = async () => {
     const trimmedEmail = email.trim();
 
     if (!trimmedEmail) {
-      Alert.alert("Missing Email", "Please enter your email.");
+      Toast.show({
+        type: 'error',
+        text1: 'Missing Email',
+        text2: 'Please enter your email.',
+      });
       return;
     }
 
-    const emailRegex =
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(trimmedEmail)) {
-      Alert.alert(
-        "Invalid Email",
-        "Please enter a valid email address."
-      );
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid Email',
+        text2: 'Please enter a valid email address.',
+      });
       return;
     }
 
@@ -43,43 +46,33 @@ export default function NewsletterCard() {
         email: trimmedEmail,
       }).unwrap();
 
-      Alert.alert(
-        "Success 🎉",
-        "You have successfully subscribed to NestMe."
-      );
+      Toast.show({
+        type: 'success',
+        text1: 'Subscribed Successfully 🎉',
+        text2: "You'll now receive the latest properties and offers.",
+      });
 
-      setEmail("");
+      setEmail('');
     } catch (err) {
-      Alert.alert(
-        "Subscription Failed",
-        err?.data?.message ||
-        err?.error ||
-        "Please try again later."
-      );
+      Toast.show({
+        type: 'error',
+        text1: 'Subscription Failed',
+        text2: err?.data?.message || err?.error || 'Please try again later.',
+      });
     }
   };
 
   return (
-    <LinearGradient
-      colors={["#051033", "#0A273F"]}
-      style={styles.card}
-    >
+    <LinearGradient colors={['#051033', '#0A273F']} style={styles.card}>
       <View style={styles.icon}>
-        <Ionicons
-          name="mail-open-outline"
-          size={34}
-          color="#fff"
-        />
+        <Ionicons name="mail-open-outline" size={34} color="#fff" />
       </View>
 
-      <Text style={styles.title}>
-        Stay Updated
-      </Text>
+      <Text style={styles.title}>Stay Updated</Text>
 
       <Text style={styles.subtitle}>
-        Get newly added properties, price
-        drops and exclusive offers directly
-        to your inbox.
+        Get newly added properties, price drops and exclusive offers directly to
+        your inbox.
       </Text>
 
       <View style={styles.inputContainer}>
@@ -108,13 +101,9 @@ export default function NewsletterCard() {
         disabled={isLoading}
       >
         {isLoading ? (
-          <ActivityIndicator
-            color="#fff"
-          />
+          <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttonText}>
-            Subscribe
-          </Text>
+          <Text style={styles.buttonText}>Subscribe</Text>
         )}
       </TouchableOpacity>
     </LinearGradient>
@@ -124,61 +113,60 @@ export default function NewsletterCard() {
 const styles = StyleSheet.create({
   card: {
     padding: 24,
-    alignItems: "center",
+    alignItems: 'center',
   },
 
   icon: {
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor:
-      "rgba(255,255,255,0.15)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   title: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 26,
-    fontWeight: "800",
+    fontWeight: '800',
     marginTop: 18,
   },
 
   subtitle: {
-    color: "rgba(255,255,255,.9)",
-    textAlign: "center",
+    color: 'rgba(255,255,255,.9)',
+    textAlign: 'center',
     marginTop: 10,
     lineHeight: 22,
     fontSize: 15,
   },
 
   inputContainer: {
-    width: "100%",
+    width: '100%',
     marginTop: 24,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 16,
   },
 
   input: {
     height: 52,
     paddingHorizontal: 18,
-    color: "#111827",
+    color: '#111827',
     fontSize: 16,
   },
 
   button: {
     marginTop: 18,
-    width: "100%",
+    width: '100%',
     height: 52,
     borderRadius: 16,
-    backgroundColor: "#111827",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#111827',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   buttonText: {
-    color: "#fff",
-    fontWeight: "700",
+    color: '#fff',
+    fontWeight: '700',
     fontSize: 16,
   },
 });
