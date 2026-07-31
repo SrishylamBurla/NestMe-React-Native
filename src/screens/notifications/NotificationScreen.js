@@ -138,7 +138,6 @@ export default function NotificationsScreen() {
           backgroundColor="#F8FAFC"
           barStyle="dark-content"
         />
-
         <SafeAreaView
           style={styles.safeArea}
           edges={["top"]}

@@ -1,11 +1,32 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Linking,
+  Alert,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Footer() {
   const navigation = useNavigation();
+  const openUrl = async url => {
+    try {
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert('Error', 'Unable to open the link.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong.');
+    }
+  };
   return (
     <LinearGradient
       colors={['#051033', '#0a273f', '#210716']}
@@ -83,21 +104,21 @@ export default function Footer() {
       <View style={styles.socialRow}>
         <TouchableOpacity
           style={[styles.social, { backgroundColor: '#E1306C' }]}
-          onPress={() => openUrl('https://instagram.com/nestme.in')}
+          onPress={() => openUrl('https://www.instagram.com/nestme.in/')}
         >
           <Ionicons name="logo-instagram" size={20} color="#fff" />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.social, { backgroundColor: '#0A66C2' }]}
-          onPress={() => openUrl('https://www.linkedin.com/')}
+          onPress={() => openUrl('https://www.linkedin.com/company/')}
         >
           <Ionicons name="logo-linkedin" size={20} color="#fff" />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.social, { backgroundColor: '#25D366' }]}
-          onPress={() => openUrl('https://wa.me/919876543210')}
+          onPress={() => openUrl('https://wa.me/91XXXXXXXXXX')}
         >
           <Ionicons name="logo-whatsapp" size={20} color="#fff" />
         </TouchableOpacity>
@@ -115,9 +136,9 @@ const styles = StyleSheet.create({
     paddingTop: 35,
     paddingHorizontal: 24,
     alignItems: 'center',
-    paddingBottom: 100
+    paddingBottom: 160,
   },
-  
+
   logo: {
     width: 80,
     height: 80,
