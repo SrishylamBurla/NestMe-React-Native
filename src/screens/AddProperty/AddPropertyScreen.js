@@ -334,7 +334,7 @@ export default function AddPropertyScreen() {
       visible={modalVisible}
       transparent
       animationType="fade"
-      statusBarTranslucent
+      Translucent
       onRequestClose={() => setModalVisible(false)}
     >
       <View style={styles.modalOverlay}>

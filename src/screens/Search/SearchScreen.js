@@ -70,7 +70,6 @@ export default function SearchScreen() {
   return (
     <>
     <StatusBar
-      translucent={false}
       backgroundColor="#111827"
       barStyle="light-content"
     />
