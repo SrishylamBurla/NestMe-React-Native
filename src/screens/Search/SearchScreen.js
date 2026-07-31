@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StatusBar, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -68,7 +68,19 @@ export default function SearchScreen() {
   );
 
   return (
+    <>
+    <StatusBar
+      translucent={false}
+      backgroundColor="#111827"
+      barStyle="light-content"
+    />
+
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={["top"]}
+    >
     <View style={styles.container}>
+    
       <SearchHeader resultCount={properties.length} />
 
       <SearchInput
@@ -123,19 +135,43 @@ export default function SearchScreen() {
         onApply={() => sheetRef.current?.close()}
         onReset={handleReset}
       />
-    </View>
+      </View>
+    </SafeAreaView>
+    
+    </>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: 10,
-    backgroundColor: '#F4F7FC',
+    // backgroundColor: '#F4F7FC',
   },
 
   filterRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 18,
+    marginBottom: 15,
+  },
+
+  tabsContainer: {
+    flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#111827", // Status bar area
+  },
+
+  container: {
+    flex: 1,
+    backgroundColor: "#F4F7FC", // Screen content
+    paddingBottom: 10,
+  },
+
+  filterRow: {
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 18,
     marginBottom: 15,
   },

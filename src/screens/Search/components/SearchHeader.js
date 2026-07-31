@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  StatusBar
+  
 } from "react-native";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useNavigation } from "@react-navigation/native";
@@ -18,12 +18,14 @@ const SearchHeader = ({
 
   return (
     <>
+    
       <View style={[
         styles.container,
-        {
-          paddingTop: (StatusBar.currentHeight || 0) + 12,
-        },
+        // {
+        //   paddingTop: (StatusBar.currentHeight || 0) + 12,
+        // },
       ]}>
+        
         <View style={styles.topRow}>
           <TouchableOpacity
             style={styles.backButton}
@@ -63,6 +65,7 @@ const styles = StyleSheet.create({
   container: {
   paddingHorizontal: 18,
   paddingBottom: 16,
+  paddingTop: 12,
   borderBottomLeftRadius: 24,
   borderBottomRightRadius: 24,
   backgroundColor: "#111827",
@@ -102,5 +105,6 @@ const styles = StyleSheet.create({
   fontSize: 14,
   fontWeight: "500",
   textAlign: "right"
-}
+},
+
 });

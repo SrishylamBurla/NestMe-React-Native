@@ -10,6 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -88,9 +89,15 @@ export default function SetPasswordScreen() {
 
   return (
     <>
-      <StatusBar backgroundColor="#0F172A" barStyle="light-content" />
-
-      <View style={styles.container}>
+     <StatusBar
+           backgroundColor="#F8FAFC"
+           barStyle="dark-content"
+         />
+     
+         <SafeAreaView
+           style={styles.container}
+           edges={["top"]}
+         >
         <ScrollView
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{
@@ -182,7 +189,7 @@ export default function SetPasswordScreen() {
             </TouchableOpacity>
           </View>
         </ScrollView>
-      </View>
+      </SafeAreaView>
     </>
   );
 }
@@ -198,7 +205,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: StatusBar.currentHeight || 0,
+    paddingTop: 12,
     paddingBottom: 18,
     paddingHorizontal: 18,
   },

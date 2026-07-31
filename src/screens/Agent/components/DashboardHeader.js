@@ -33,10 +33,10 @@ export default function DashboardHeader({
 
   return (
     <>
-      {/* <StatusBar
+      <StatusBar
         barStyle="dark-content"
-        backgroundColor="#6f5ad5"
-      /> */}
+        backgroundColor="#5B3DF5"
+      />
 
       <View style={styles.container}>
 
@@ -108,11 +108,11 @@ const styles = StyleSheet.create({
   backgroundColor: "#5B3DF5",
   paddingHorizontal: 20,
 
-  paddingTop:
-    Platform.OS === "android"
-      ? StatusBar.currentHeight + 0
-      : 60,
-
+  // paddingTop:
+  //   Platform.OS === "android"
+  //     ? StatusBar.currentHeight + 0
+  //     : 60,
+paddingTop: 12,
   paddingBottom: 28,
   marginBottom: 24,
 

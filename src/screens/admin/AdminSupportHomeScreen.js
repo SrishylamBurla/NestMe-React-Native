@@ -7,8 +7,9 @@ import {
   ActivityIndicator,
   StyleSheet,
   Text,
+  StatusBar
 } from "react-native";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
 import { useGetAdminSupportTicketsQuery } from "../../services/supportApi"
@@ -49,18 +50,35 @@ export default function AdminSupportHomeScreen() {
   }, [tickets, search]);
 
   if (isLoading) {
-    return (
-      <View style={styles.loader}>
-        <ActivityIndicator
-          size="large"
-          color="#5B3DF5"
-        />
-      </View>
-    );
-  }
+      return (
+        <>
+          <StatusBar
+            translucent
+            backgroundColor="transparent"
+            barStyle="light-content"
+          />
+  
+          <SafeAreaView style={styles.safeArea} edges={['top']}>
+            <View style={styles.loader}>
+              <ActivityIndicator size="large" color="#5B3DF5" />
+            </View>
+          </SafeAreaView>
+        </>
+      );
+    }
 
   return (
-    <View style={styles.container}>
+    <>
+               <StatusBar
+               translucent
+                     backgroundColor="transparent"
+                     barStyle="dark-content"
+                   />
+               
+                   <SafeAreaView
+                     style={styles.container}
+                     edges={["top"]}
+                   >
       <SupportHeader
         title="Support Tickets"
         subtitle={`${tickets.length} Tickets`}
@@ -120,11 +138,14 @@ export default function AdminSupportHomeScreen() {
           </TouchableOpacity>
         )}
       />
-    </View>
+    </SafeAreaView></>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: "#F4F7FC",

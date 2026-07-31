@@ -12,10 +12,11 @@ import { useNavigation } from '@react-navigation/native';
 import { useGetMeQuery } from '../../../services/authApi';
 import { useGetNotificationsQuery } from '../../../services/notificationApi';
 import { useGetSavedPropertiesQuery } from '../../../services/savedApi';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function HomeHeader() {
   const navigation = useNavigation();
-
+  const insets = useSafeAreaInsets();
   const { data, isLoading } = useGetMeQuery();
 
   const user = data?.user;
@@ -52,9 +53,7 @@ export default function HomeHeader() {
       <View
         style={[
           styles.container,
-          {
-            paddingTop: StatusBar.currentHeight || 0,
-          },
+          // { paddingTop: StatusBar.currentHeight || 0 }
         ]}
       >
         {/* Left */}
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
+    paddingTop: 5,
     paddingHorizontal: 18,
     paddingBottom: 10,
   },
@@ -184,13 +183,13 @@ const styles = StyleSheet.create({
 
   welcome: {
     color: '#A0AEC0',
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: '500',
   },
 
   username: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: '500',
     marginTop: 2,
     maxWidth: 180,
@@ -217,8 +216,8 @@ const styles = StyleSheet.create({
   },
 
   iconButton: {
-    width: 46,
-    height: 46,
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 16,
@@ -228,8 +227,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 2,
     right: 0,
-    minWidth: 20,
-    height: 20,
+    minWidth: 16,
+    height: 16,
     borderRadius: 10,
     backgroundColor: '#FF2D55',
     justifyContent: 'center',

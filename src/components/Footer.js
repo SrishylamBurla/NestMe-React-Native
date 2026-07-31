@@ -112,11 +112,12 @@ export default function Footer() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 35,
+    paddingTop: 35,
     paddingHorizontal: 24,
     alignItems: 'center',
+    paddingBottom: 100
   },
-
+  
   logo: {
     width: 80,
     height: 80,

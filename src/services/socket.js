@@ -12,7 +12,6 @@ const SOCKET_URL =
   //   process.env.NODE_ENV === 'development'
   //     ? 'http://192.168.0.4:3000'
   //     : 'https://www.nestme.in';
-  console.log('Connecting to:', SOCKET_URL);
   socket = io(SOCKET_URL, {
     transports: ['polling', 'websocket'],
     withCredentials: true,

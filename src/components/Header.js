@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  StatusBar,
 } from "react-native";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useNavigation } from "@react-navigation/native";
@@ -16,45 +15,28 @@ export default function Header({
   const navigation = useNavigation();
 
   return (
-    <>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="#F8FAFC"
-      />
-
-      <View
-        style={[
-          styles.container,
-          {
-            paddingTop:
-              StatusBar.currentHeight || 0,
-          },
-        ]}
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
       >
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons
-            name="chevron-back"
-            size={22}
-            color="#111827"
-          />
-        </TouchableOpacity>
+        <Ionicons
+          name="chevron-back"
+          size={22}
+          color="#111827"
+        />
+      </TouchableOpacity>
 
-        <View>
-          <Text style={styles.title}>
-            {title}
+      <View style={styles.textContainer}>
+        <Text style={styles.title}>{title}</Text>
+
+        {!!subtitle && (
+          <Text style={styles.subtitle}>
+            {subtitle}
           </Text>
-
-          {!!subtitle && (
-            <Text style={styles.subtitle}>
-              {subtitle}
-            </Text>
-          )}
-        </View>
+        )}
       </View>
-    </>
+    </View>
   );
 }
 
@@ -66,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
 
     paddingHorizontal: 18,
-    paddingBottom: 12,
+    paddingVertical: 12,
 
     borderBottomWidth: 1,
     borderBottomColor: "#E5E7EB",
@@ -83,6 +65,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#F1F5F9",
 
     marginRight: 14,
+  },
+
+  textContainer: {
+    flex: 1,
   },
 
   title: {

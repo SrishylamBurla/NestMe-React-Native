@@ -6,8 +6,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  StatusBar,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import Ionicons from '@react-native-vector-icons/ionicons';
 
@@ -122,145 +124,156 @@ const CreateTicketScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <SupportHeader
-        title="Create Ticket"
-        subtitle="Tell us how we can help"
-        showBack
-        onBackPress={() => navigation.goBack()}
-      />
+    <>
+      <StatusBar backgroundColor="#F8FAFC" barStyle="dark-content" />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}
-      >
-        <Text style={styles.sectionTitle}>Issue Title</Text>
-
-        <TextInput
-          value={subject}
-          onChangeText={setSubject}
-          placeholder="Briefly describe your issue"
-          placeholderTextColor="#94A3B8"
-          style={styles.input}
-        />
-        <Text style={styles.sectionTitle}>Category</Text>
-
-        <View style={styles.categoryGrid}>
-          {CATEGORIES.map(item => {
-            const selected = category === item.key;
-
-            return (
-              <TouchableOpacity
-                key={item.key}
-                activeOpacity={0.85}
-                onPress={() => setCategory(item.key)}
-                style={[
-                  styles.categoryCard,
-                  selected && styles.selectedCategory,
-                ]}
-              >
-                <Ionicons
-                  name={item.icon}
-                  size={26}
-                  color={selected ? '#FFFFFF' : '#5B3DF5'}
-                />
-
-                <Text
-                  style={[
-                    styles.categoryText,
-                    selected && styles.selectedCategoryText,
-                  ]}
-                >
-                  {item.title}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-
-        <Text style={styles.sectionTitle}>Priority</Text>
-
-        <View style={styles.priorityRow}>
-          {PRIORITIES.map(item => {
-            const active = priority === item.key;
-
-            return (
-              <TouchableOpacity
-                key={item.key}
-                onPress={() => setPriority(item.key)}
-                style={[styles.priorityCard, active && styles.prioritySelected]}
-              >
-                <View
-                  style={[
-                    styles.priorityDot,
-                    {
-                      backgroundColor: item.color,
-                    },
-                  ]}
-                />
-
-                <Text
-                  style={[
-                    styles.priorityText,
-                    active && styles.prioritySelectedText,
-                  ]}
-                >
-                  {item.key.charAt(0).toUpperCase() + item.key.slice(1)}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-
-        <Text style={styles.sectionTitle}>Describe your issue</Text>
-
-        <TextInput
-          value={message}
-          onChangeText={setMessage}
-          multiline
-          maxLength={1000}
-          placeholder="Explain your issue in detail..."
-          placeholderTextColor="#94A3B8"
-          textAlignVertical="top"
-          style={styles.messageBox}
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <SupportHeader
+          title="Create Ticket"
+          subtitle="Tell us how we can help"
+          showBack
+          onBackPress={() => navigation.goBack()}
         />
 
-        <Text style={styles.counter}>{message.length}/1000</Text>
-
-        <Text style={styles.sectionTitle}>Attachments</Text>
-
-        <View style={styles.attachRow}>
-          <TouchableOpacity style={styles.attachCard}>
-            <Ionicons name="images-outline" size={24} color="#5B3DF5" />
-
-            <Text style={styles.attachText}>Gallery</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.attachCard}>
-            <Ionicons name="document-text-outline" size={24} color="#5B3DF5" />
-
-            <Text style={styles.attachText}>Document</Text>
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity
-          activeOpacity={0.9}
-          disabled={isLoading}
-          onPress={submitHandler}
-          style={styles.button}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.content}
         >
-          {isLoading ? (
-            <ActivityIndicator color="#FFFFFF" />
-          ) : (
-            <>
-              <Ionicons name="send" size={18} color="#FFF" />
+          <Text style={styles.sectionTitle}>Issue Title</Text>
 
-              <Text style={styles.buttonText}>Create Ticket</Text>
-            </>
-          )}
-        </TouchableOpacity>
-      </ScrollView>
-    </View>
+          <TextInput
+            value={subject}
+            onChangeText={setSubject}
+            placeholder="Briefly describe your issue"
+            placeholderTextColor="#94A3B8"
+            style={styles.input}
+          />
+          <Text style={styles.sectionTitle}>Category</Text>
+
+          <View style={styles.categoryGrid}>
+            {CATEGORIES.map(item => {
+              const selected = category === item.key;
+
+              return (
+                <TouchableOpacity
+                  key={item.key}
+                  activeOpacity={0.85}
+                  onPress={() => setCategory(item.key)}
+                  style={[
+                    styles.categoryCard,
+                    selected && styles.selectedCategory,
+                  ]}
+                >
+                  <Ionicons
+                    name={item.icon}
+                    size={26}
+                    color={selected ? '#FFFFFF' : '#5B3DF5'}
+                  />
+
+                  <Text
+                    style={[
+                      styles.categoryText,
+                      selected && styles.selectedCategoryText,
+                    ]}
+                  >
+                    {item.title}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          <Text style={styles.sectionTitle}>Priority</Text>
+
+          <View style={styles.priorityRow}>
+            {PRIORITIES.map(item => {
+              const active = priority === item.key;
+
+              return (
+                <TouchableOpacity
+                  key={item.key}
+                  onPress={() => setPriority(item.key)}
+                  style={[
+                    styles.priorityCard,
+                    active && styles.prioritySelected,
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.priorityDot,
+                      {
+                        backgroundColor: item.color,
+                      },
+                    ]}
+                  />
+
+                  <Text
+                    style={[
+                      styles.priorityText,
+                      active && styles.prioritySelectedText,
+                    ]}
+                  >
+                    {item.key.charAt(0).toUpperCase() + item.key.slice(1)}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          <Text style={styles.sectionTitle}>Describe your issue</Text>
+
+          <TextInput
+            value={message}
+            onChangeText={setMessage}
+            multiline
+            maxLength={1000}
+            placeholder="Explain your issue in detail..."
+            placeholderTextColor="#94A3B8"
+            textAlignVertical="top"
+            style={styles.messageBox}
+          />
+
+          <Text style={styles.counter}>{message.length}/1000</Text>
+
+          <Text style={styles.sectionTitle}>Attachments</Text>
+
+          <View style={styles.attachRow}>
+            <TouchableOpacity style={styles.attachCard}>
+              <Ionicons name="images-outline" size={24} color="#5B3DF5" />
+
+              <Text style={styles.attachText}>Gallery</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.attachCard}>
+              <Ionicons
+                name="document-text-outline"
+                size={24}
+                color="#5B3DF5"
+              />
+
+              <Text style={styles.attachText}>Document</Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity
+            activeOpacity={0.9}
+            disabled={isLoading}
+            onPress={submitHandler}
+            style={styles.button}
+          >
+            {isLoading ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <>
+                <Ionicons name="send" size={18} color="#FFF" />
+
+                <Text style={styles.buttonText}>Create Ticket</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 };
 

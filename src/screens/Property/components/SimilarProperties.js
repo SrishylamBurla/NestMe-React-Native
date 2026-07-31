@@ -43,11 +43,7 @@ export default function SimilarProperties({
                         View All
                     </Text>
 
-                    <Ionicons
-                        name="chevron-forward"
-                        size={18}
-                        color="#111827"
-                    />
+                    
                 </TouchableOpacity>
             </View>
 
@@ -117,5 +113,8 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         color: "#111827",
         marginRight: 2,
+        borderWidth: 1,
+        borderRadius: 5,
+        padding:2
     },
 });

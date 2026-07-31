@@ -244,9 +244,16 @@ export default function AddPropertyScreen() {
   };
 
   return (
-  <SafeAreaView style={styles.container}>
-    <StatusBar barStyle="dark-content" />
+  <>
+    <StatusBar
+      backgroundColor="#F8FAFC"
+      barStyle="dark-content"
+    />
 
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={["top"]}
+    >
     <StepIndicator step={step} />
 
     <View style={styles.content}>
@@ -373,11 +380,16 @@ export default function AddPropertyScreen() {
     </Modal>
 
   </SafeAreaView>
+</>
 );
 
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+   flex:1,
+    backgroundColor:"#F8FAFC",
+  },
   container: {
   flex: 1,
   backgroundColor: "#F8FAFC",

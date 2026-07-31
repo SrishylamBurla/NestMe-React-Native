@@ -5,8 +5,9 @@ import {
   StyleSheet,
   ActivityIndicator,
   Text,
+  StatusBar
 } from 'react-native';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../../components/Header';
 import FilterBar from './components/FilterBar';
 import VerticalPropertyCard from '../../components/VerticalPropertyCard';
@@ -62,31 +63,59 @@ export default function PropertiesScreen() {
     : filteredProperties;
 
   if (isLoading) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#4F46E5" />
-      </View>
-    );
-  }
+  return (
+    <>
+      <StatusBar
+        backgroundColor="#F8FAFC"
+        barStyle="dark-content"
+      />
+
+      <SafeAreaView
+        style={styles.safeArea}
+        edges={["top"]}
+      >
+        <View style={styles.loading}>
+          <ActivityIndicator
+            size="large"
+            color="#4F46E5"
+          />
+        </View>
+      </SafeAreaView>
+    </>
+  );
+}
 
   if (error) {
-    return (
-      <View style={styles.loading}>
-        <Text>Failed to load properties.</Text>
-      </View>
-    );
-  }
-  // useEffect(() => {
-  //   if (propertyType) {
-  //     setFilters(prev => ({
-  //       ...prev,
-  //       page: 1,
-  //       propertyType,
-  //     }));
-  //   }
-  // }, [propertyType]);
   return (
-    <View style={styles.container}>
+    <>
+      <StatusBar
+        backgroundColor="#F8FAFC"
+        barStyle="dark-content"
+      />
+
+      <SafeAreaView
+        style={styles.safeArea}
+        edges={["top"]}
+      >
+        <View style={styles.loading}>
+          <Text>Failed to load properties.</Text>
+        </View>
+      </SafeAreaView>
+    </>
+  );
+}
+  return (
+  <>
+    <StatusBar
+      backgroundColor="#F8FAFC"
+      barStyle="dark-content"
+    />
+
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={["top"]}
+    >
+      <View style={styles.container}>
       <Header
         title={PROPERTY_LABELS[propertyType] || 'Explore Properties'}
         subtitle={`${properties.length} properties found`}
@@ -120,6 +149,8 @@ export default function PropertiesScreen() {
         // }
       />
     </View>
+    </SafeAreaView>
+  </>
   );
 }
 
@@ -129,6 +160,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFC',
   },
 
+  safeArea: {
+  flex: 1,
+  backgroundColor: "#F8FAFC",
+},
   loading: {
     flex: 1,
     justifyContent: 'center',

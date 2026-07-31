@@ -4,9 +4,10 @@ import {
     View,
     FlatList,
     ActivityIndicator,
+    StatusBar
 } from "react-native";
 import { useGetSupportTicketsQuery } from "../../services/supportApi"
-
+import { SafeAreaView } from "react-native-safe-area-context";
 import SupportHeader from "./components/SupportHeader";
 import SearchBar from "./components/SearchBar";
 import TicketCard from "./components/TicketCard";
@@ -48,7 +49,16 @@ const SupportHomeScreen = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
+       <>
+            <StatusBar
+                  backgroundColor="#F8FAFC"
+                  barStyle="dark-content"
+                />
+            
+                <SafeAreaView
+                  style={styles.container}
+                  edges={["top"]}
+                >
             <SupportHeader
                 title="Support"
                 showBack
@@ -102,7 +112,8 @@ const SupportHomeScreen = ({ navigation }) => {
                     navigation.navigate("CreateTicket")
                 }
             />
-        </View>
+        </SafeAreaView>
+        </>
     );
 };
 

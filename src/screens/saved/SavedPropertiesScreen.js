@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -7,13 +7,14 @@ import {
   StyleSheet,
   ActivityIndicator,
   StatusBar,
-} from "react-native";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import { useNavigation } from "@react-navigation/native";
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import { useNavigation } from '@react-navigation/native';
 
-import { useGetSavedPropertiesQuery } from "../../services/savedApi";
-import SavedPropertyCard from "../../components/SavedPropertyCard"
-import Header from "../../components/Header"
+import { useGetSavedPropertiesQuery } from '../../services/savedApi';
+import SavedPropertyCard from '../../components/SavedPropertyCard';
+import Header from '../../components/Header';
 
 export default function SavedPropertiesScreen() {
   const navigation = useNavigation();
@@ -25,40 +26,34 @@ export default function SavedPropertiesScreen() {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator
-          size="large"
-          color="#4F46E5"
-        />
+        <ActivityIndicator size="large" color="#4F46E5" />
 
-        <Text style={styles.loadingText}>
-          Loading saved properties...
-        </Text>
+        <Text style={styles.loadingText}>Loading saved properties...</Text>
       </View>
     );
   }
 
   if (error) {
-  return (
-    <View style={styles.emptyContainer}>
-      <Text>
-        Failed to load saved properties.
-      </Text>
-    </View>
-  );
-}
+    return (
+      <View style={styles.emptyContainer}>
+        <Text>Failed to load saved properties.</Text>
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.container}>
+    <>
       <StatusBar
-        backgroundColor="#F8FAFC"
+        translucent
+        backgroundColor="transparent"
         barStyle="dark-content"
       />
 
-      <Header
-        title="Saved Properties"
-        subtitle="Your favourite listings"
-      />
-{/* 
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
+        <View style={styles.container}>
+
+          <Header title="Saved Properties" subtitle="Your favourite listings" />
+          {/* 
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -82,68 +77,66 @@ export default function SavedPropertiesScreen() {
         </View>
       </View> */}
 
-      {/* Empty */}
+          {/* Empty */}
 
-      {savedProperties.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Ionicons
-            name="heart"
-            size={70}
-            color="#CBD5E1"
-          />
+          {savedProperties.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Ionicons name="heart" size={70} color="#CBD5E1" />
 
-          <Text style={styles.emptyTitle}>
-            No saved properties yet
-          </Text>
+              <Text style={styles.emptyTitle}>No saved properties yet</Text>
 
-          <Text style={styles.emptySubtitle}>
-            Tap the ❤️ icon to save a property
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={savedProperties}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => (
-            <SavedPropertyCard
-              property={item.property}
-              onPress={() =>
-                navigation.navigate(
-                  "PropertyDetails",
-                  {
-                    id: item.property._id,
+              <Text style={styles.emptySubtitle}>
+                Tap the ❤️ icon to save a property
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              data={savedProperties}
+              keyExtractor={item => item._id}
+              renderItem={({ item }) => (
+                <SavedPropertyCard
+                  property={item.property}
+                  onPress={() =>
+                    navigation.navigate('PropertyDetails', {
+                      id: item.property._id,
+                    })
                   }
-                )
-              }
+                />
+              )}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingBottom: 100,
+                paddingTop: 10,
+              }}
             />
           )}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: 100,
-            paddingTop: 10,
-          }}
-        />
-      )}
-    </View>
+        </View>
+      </SafeAreaView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F8FAFC',
+  },
+
+  safeArea: {
+    flex: 1,
     backgroundColor: "#F8FAFC",
   },
 
   loadingContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F8FAFC",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
   },
 
   loadingText: {
     marginTop: 14,
-    color: "#64748B",
+    color: '#64748B',
     fontSize: 15,
   },
 
@@ -188,8 +181,8 @@ const styles = StyleSheet.create({
 
   emptyContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
 
     paddingHorizontal: 30,
   },
@@ -197,14 +190,14 @@ const styles = StyleSheet.create({
   emptyTitle: {
     marginTop: 18,
     fontSize: 21,
-    fontWeight: "700",
-    color: "#334155",
+    fontWeight: '700',
+    color: '#334155',
   },
 
   emptySubtitle: {
     marginTop: 8,
     fontSize: 15,
-    color: "#94A3B8",
-    textAlign: "center",
+    color: '#94A3B8',
+    textAlign: 'center',
   },
 });

@@ -1,25 +1,26 @@
-import React, { useMemo } from "react";
+import React, { useMemo } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+  StatusBar
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import DashboardHeader from "./components/DashboardHeader"
-import StatsScroll from "./components/StatsScroll";
-import ProfileStats from "./components/ProfileStats";
-import QuickActions from "./components/QuickActions";
-import LeadsPreview from "./components/LeadsPreview";
-import PropertiesPreview from "./components/PropertiesPreview";
+import DashboardHeader from './components/DashboardHeader';
+import StatsScroll from './components/StatsScroll';
+import ProfileStats from './components/ProfileStats';
+import QuickActions from './components/QuickActions';
+import LeadsPreview from './components/LeadsPreview';
+import PropertiesPreview from './components/PropertiesPreview';
 
-import { useGetMeQuery } from "../../services/authApi"
+import { useGetMeQuery } from '../../services/authApi';
 import {
   useGetAgentPropertiesQuery,
   useGetAgentLeadsQuery,
-} from "../../services/agentApi"
+} from '../../services/agentApi';
 
 export default function AgentDashboardScreen({ navigation }) {
   /* ---------------- Current User ---------------- */
@@ -57,41 +58,40 @@ export default function AgentDashboardScreen({ navigation }) {
 
   if (userLoading) {
     return (
-      <SafeAreaView style={styles.center}>
-        <ActivityIndicator
-          size="large"
-          color="#5B3DF5"
-        />
-        <Text style={styles.loadingText}>
-          Loading Dashboard...
-        </Text>
-      </SafeAreaView>
+      <>
+        <StatusBar backgroundColor="#F4F7FC" barStyle="dark-content" />
+
+        <SafeAreaView style={styles.center} edges={['top']}>
+          <ActivityIndicator size="large" color="#5B3DF5" />
+          <Text style={styles.loadingText}>Loading Dashboard...</Text>
+        </SafeAreaView>
+      </>
     );
   }
 
   if (!user) {
     return (
-      <SafeAreaView style={styles.center}>
-        <Text style={styles.errorTitle}>
-          Not Logged In
-        </Text>
-        <Text style={styles.errorText}>
-          Please login to continue.
-        </Text>
-      </SafeAreaView>
+      <>
+        <StatusBar backgroundColor="#F4F7FC" barStyle="dark-content" />
+
+        <SafeAreaView style={styles.center} edges={['top']}>
+          <Text style={styles.errorTitle}>Not Logged In</Text>
+          <Text style={styles.errorText}>Please login to continue.</Text>
+        </SafeAreaView>
+      </>
     );
   }
 
   if (!agentId) {
     return (
-      <SafeAreaView style={styles.center}>
-        <Text style={styles.errorTitle}>
-          Invalid Agent
-        </Text>
-        <Text style={styles.errorText}>
-          Agent profile not found.
-        </Text>
-      </SafeAreaView>
+      <>
+        <StatusBar backgroundColor="#F4F7FC" barStyle="dark-content" />
+
+        <SafeAreaView style={styles.center} edges={['top']}>
+          <Text style={styles.errorTitle}>Invalid Agent</Text>
+          <Text style={styles.errorText}>Agent profile not found.</Text>
+        </SafeAreaView>
+      </>
     );
   }
 
@@ -104,24 +104,18 @@ export default function AgentDashboardScreen({ navigation }) {
 
   const stats = useMemo(() => {
     const activeListings = properties.filter(
-      (p) =>
-        p.approvalStatus === "approved" &&
-        p.listingStatus === "available"
+      p => p.approvalStatus === 'approved' && p.listingStatus === 'available',
     ).length;
 
     const pendingListings = properties.filter(
-      (p) => p.approvalStatus === "pending"
+      p => p.approvalStatus === 'pending',
     ).length;
 
     const closedDeals = properties.filter(
-      (p) =>
-        p.listingStatus === "sold" ||
-        p.listingStatus === "rented"
+      p => p.listingStatus === 'sold' || p.listingStatus === 'rented',
     ).length;
 
-    const newLeads = leads.filter(
-      (l) => l.status === "new"
-    ).length;
+    const newLeads = leads.filter(l => l.status === 'new').length;
 
     return {
       activeListings,
@@ -134,85 +128,64 @@ export default function AgentDashboardScreen({ navigation }) {
   /* ---------------- Refresh ---------------- */
 
   const onRefresh = async () => {
-    await Promise.all([
-      refetchUser(),
-      refetchProperties(),
-      refetchLeads(),
-    ]);
+    await Promise.all([refetchUser(), refetchProperties(), refetchLeads()]);
   };
 
   return (
-    <SafeAreaView
-      style={styles.container}
-      edges={["left", "right", "bottom"]}
-    >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}
-        refreshControl={
-          <RefreshControl
-            refreshing={
-              propertiesLoading ||
-              leadsLoading
-            }
-            onRefresh={onRefresh}
-            colors={["#5B3DF5"]}
-            tintColor="#5B3DF5"
+    <>
+      <StatusBar barStyle="dark-content" />
+
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.content}
+          refreshControl={
+            <RefreshControl
+              refreshing={propertiesLoading || leadsLoading}
+              onRefresh={onRefresh}
+              colors={['#5B3DF5']}
+              tintColor="#5B3DF5"
+            />
+          }
+        >
+          {/* Header */}
+
+          <DashboardHeader user={user} navigation={navigation} />
+
+          {/* Stats */}
+
+          <StatsScroll
+            activeListings={stats.activeListings}
+            pendingListings={stats.pendingListings}
+            closedDeals={stats.closedDeals}
+            newLeads={stats.newLeads}
           />
-        }
-      >
-        {/* Header */}
 
-        <DashboardHeader
-          user={user}
-          navigation={navigation}
-        />
+          {/* Profile */}
 
-        {/* Stats */}
+          <ProfileStats user={user} navigation={navigation} />
 
-        <StatsScroll
-          activeListings={stats.activeListings}
-          pendingListings={stats.pendingListings}
-          closedDeals={stats.closedDeals}
-          newLeads={stats.newLeads}
-        />
+          {/* Quick Actions */}
 
-        {/* Profile */}
+          <QuickActions navigation={navigation} agentId={agentId} />
 
-        <ProfileStats
-          user={user}
-          navigation={navigation}
-        />
+          {/* Leads */}
 
-        {/* Quick Actions */}
+          <LeadsPreview navigation={navigation} agentId={agentId} />
 
-        <QuickActions
-          navigation={navigation}
-          agentId={agentId}
-        />
+          {/* Properties */}
 
-        {/* Leads */}
-
-        <LeadsPreview
-          navigation={navigation}
-          agentId={agentId}
-        />
-
-        {/* Properties */}
-
-        <PropertiesPreview
-          navigation={navigation}
-          agentId={agentId}
-        />
-      </ScrollView>
-    </SafeAreaView>
+          <PropertiesPreview navigation={navigation} agentId={agentId} />
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F4F7FC",
+    // backgroundColor: '#F4F7FC',
   },
 
   content: {
@@ -221,33 +194,32 @@ const styles = StyleSheet.create({
 
   center: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F4F7FC",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F4F7FC',
     paddingHorizontal: 24,
   },
 
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    fontWeight: "600",
-    color: "#64748B",
+    fontWeight: '600',
+    color: '#64748B',
   },
 
   errorTitle: {
     fontSize: 22,
-    fontWeight: "700",
-    color: "#111827",
+    fontWeight: '700',
+    color: '#111827',
   },
 
   errorText: {
     marginTop: 8,
-    textAlign: "center",
-    color: "#64748B",
+    textAlign: 'center',
+    color: '#64748B',
     fontSize: 15,
   },
 });
-
 
 // import React, { useMemo } from "react";
 // import {

@@ -37,7 +37,7 @@ export default function SearchBar({ onPress }) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 56,
+    height: 46,
     backgroundColor: "#FFFFFF",
     borderRadius: 18,
     flexDirection: "row",

@@ -7,7 +7,10 @@ import {
   Platform,
   StyleSheet,
   View,
+  StatusBar,
+  RefreshControl,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import SupportHeader from './components/SupportHeader';
 import ChatBubble from './components/ChatBubble';
@@ -19,7 +22,7 @@ import {
   useMarkSupportReadMutation,
 } from '../../services/supportApi';
 
-const SupportChatScreen = ({ navigation, route }) => {
+export default function SupportChatScreen({ navigation, route }) {
   const { ticketId } = route.params;
 
   const flatListRef = useRef(null);
@@ -34,28 +37,29 @@ const SupportChatScreen = ({ navigation, route }) => {
   const [markRead] = useMarkSupportReadMutation();
 
   const ticket = data?.ticket;
-
   const messages = data?.messages || [];
 
   useEffect(() => {
     markRead(ticketId);
-  }, [ticketId]);
+  }, [ticketId, markRead]);
 
   useEffect(() => {
     if (messages.length) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         flatListRef.current?.scrollToEnd({
           animated: true,
         });
       }, 100);
+
+      return () => clearTimeout(timer);
     }
   }, [messages]);
 
-  // useFocusEffect(
-  //     useCallback(() => {
-  //         refetch();
-  //     }, [refetch])
-  // );
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
 
   const sendHandler = async () => {
     if (!message.trim()) return;
@@ -67,44 +71,51 @@ const SupportChatScreen = ({ navigation, route }) => {
       }).unwrap();
 
       setMessage('');
-
     } catch (err) {
       console.log(err);
     }
   };
-  if (isLoading || isFetching) {
+
+  if (isLoading) {
     return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#5B3DF5" />
-      </View>
+      <>
+        <StatusBar backgroundColor="#F4F7FC" barStyle="dark-content" />
+
+        <SafeAreaView style={styles.safeArea} edges={['top']}>
+          <View style={styles.loader}>
+            <ActivityIndicator size="large" color="#5B3DF5" />
+          </View>
+        </SafeAreaView>
+      </>
     );
   }
-  return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <View style={styles.container}>
-        <SupportHeader
-          title={ticket?.subject || 'Support Ticket'}
-          subtitle={ticket?.status || ''}
-          showBack
-          onBackPress={() => navigation.goBack()}
-        />
 
-        <View style={{ flex: 1 }}>
+  return (
+    <>
+      <StatusBar backgroundColor="#F4F7FC" barStyle="dark-content" />
+
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <SupportHeader
+            title={ticket?.subject || 'Support Ticket'}
+            subtitle={ticket?.status || ''}
+            showBack
+            onBackPress={() => navigation.goBack()}
+          />
+
           <FlatList
             ref={flatListRef}
             data={messages}
             keyExtractor={item => item._id}
             renderItem={({ item }) => <ChatBubble message={item} />}
-            contentContainerStyle={{
-              padding: 18,
-              paddingBottom: 20,
-            }}
-            onRefresh={refetch}
-            refreshing={false}
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.chatContent}
+            refreshControl={
+              <RefreshControl refreshing={isFetching} onRefresh={refetch} />
+            }
           />
 
           <ChatInput
@@ -113,15 +124,18 @@ const SupportChatScreen = ({ navigation, route }) => {
             onSend={sendHandler}
             loading={sending}
           />
-        </View>
-      </View>
-    </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </>
   );
-};
-
-export default SupportChatScreen;
+}
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F4F7FC',
+  },
+
   container: {
     flex: 1,
     backgroundColor: '#F4F7FC',
@@ -131,5 +145,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F4F7FC',
+  },
+
+  chatContent: {
+    padding: 18,
+    paddingBottom: 20,
+    flexGrow: 1,
   },
 });

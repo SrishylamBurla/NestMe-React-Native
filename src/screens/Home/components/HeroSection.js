@@ -83,8 +83,8 @@ export default function HeroSection() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingTop: 180,
-    paddingBottom: 80,
+    paddingTop: 160,
+    paddingBottom: 60,
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
   },

@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Text,
   TouchableOpacity,
+  StatusBar
 } from 'react-native';
 
 import Ionicons from '@react-native-vector-icons/ionicons';
@@ -76,6 +77,12 @@ export default function PropertyDetailsScreen() {
   }
 
   return (
+    <>
+  <StatusBar
+    translucent
+    backgroundColor="transparent"
+    barStyle="light-content"
+  />
     <View style={styles.container}>
       <HeroCarousel property={property} images={property.images} />
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -220,7 +227,7 @@ export default function PropertyDetailsScreen() {
                     </Text>
                 </TouchableOpacity>
             </View> */}
-    </View>
+    </View></>
   );
 }
 

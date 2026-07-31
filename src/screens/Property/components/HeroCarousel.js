@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Image,
@@ -8,23 +8,22 @@ import {
   TouchableOpacity,
   Share,
   ActivityIndicator,
-} from "react-native";
+} from 'react-native';
 
 import {
   useGetSavedPropertiesQuery,
   useToggleSavePropertyMutation,
-} from "../../../services/savedApi";
-import { useNavigation } from "@react-navigation/native";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import Carousel from "react-native-reanimated-carousel";
-import { NEXT_PUBLIC_APP_URL } from "@env";
+} from '../../../services/savedApi';
+import { useNavigation } from '@react-navigation/native';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import Carousel from 'react-native-reanimated-carousel';
+import { NEXT_PUBLIC_APP_URL } from '@env';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 
-export default function HeroCarousel({
-  property,
-  images = [],
-}) {
+export default function HeroCarousel({ property, images = [] }) {
+  const insets = useSafeAreaInsets();
   const [index, setIndex] = useState(0);
   const navigation = useNavigation();
   const { data } = useGetSavedPropertiesQuery();
@@ -33,9 +32,7 @@ export default function HeroCarousel({
     useToggleSavePropertyMutation();
 
   const isSaved =
-    data?.saved?.some(
-      (item) => item.property._id === property?._id
-    ) || false;
+    data?.saved?.some(item => item.property._id === property?._id) || false;
 
   const handleSave = async () => {
     try {
@@ -60,27 +57,29 @@ ${NEXT_PUBLIC_APP_URL}/properties/${property._id}`,
     }
   };
 
-  const slides =
-    images.length
-      ? images
-      : [
+  const slides = images.length
+    ? images
+    : [
         {
-          url: "https://via.placeholder.com/600x400",
+          url: 'https://via.placeholder.com/600x400',
         },
       ];
 
   return (
     <View style={styles.container}>
-      <View style={styles.topBar}>
+      <View
+        style={[
+          styles.topBar,
+          {
+            top: insets.top + 12,
+          },
+        ]}
+      >
         <TouchableOpacity
           style={styles.circleButton}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons
-            name="chevron-back"
-            size={24}
-            color="#fff"
-          />
+          <Ionicons name="chevron-back" size={24} color="#fff" />
         </TouchableOpacity>
 
         <View style={styles.rightButtons}>
@@ -90,34 +89,18 @@ ${NEXT_PUBLIC_APP_URL}/properties/${property._id}`,
             disabled={saving}
           >
             {saving ? (
-              <ActivityIndicator
-                size="small"
-                color="#fff"
-              />
+              <ActivityIndicator size="small" color="#fff" />
             ) : (
               <Ionicons
-                name={
-                  isSaved
-                    ? "heart"
-                    : "heart-outline"
-                }
+                name={isSaved ? 'heart' : 'heart-outline'}
                 size={22}
-                color={
-                  isSaved ? "#EF4444" : "#fff"
-                }
+                color={isSaved ? '#EF4444' : '#fff'}
               />
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.circleButton}
-            onPress={handleShare}
-          >
-            <Ionicons
-              name="share-social-outline"
-              size={22}
-              color="#fff"
-            />
+          <TouchableOpacity style={styles.circleButton} onPress={handleShare}>
+            <Ionicons name="share-social-outline" size={22} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
@@ -129,12 +112,9 @@ ${NEXT_PUBLIC_APP_URL}/properties/${property._id}`,
         loop={slides.length > 1}
         data={slides}
         scrollAnimationDuration={700}
-        onSnapToItem={(i) => setIndex(i)}
+        onSnapToItem={i => setIndex(i)}
         renderItem={({ item }) => (
-          <Image
-            source={{ uri: item.url }}
-            style={styles.image}
-          />
+          <Image source={{ uri: item.url }} style={styles.image} />
         )}
       />
 
@@ -153,22 +133,14 @@ ${NEXT_PUBLIC_APP_URL}/properties/${property._id}`,
       {/* Swipe Hint */}
 
       <View style={styles.hint}>
-        <Text style={styles.hintText}>
-          Swipe to view more photos
-        </Text>
+        <Text style={styles.hintText}>Swipe to view more photos</Text>
       </View>
 
       {/* Pagination */}
 
       <View style={styles.pagination}>
         {slides.map((_, i) => (
-          <View
-            key={i}
-            style={[
-              styles.dot,
-              index === i && styles.activeDot,
-            ]}
-          />
+          <View key={i} style={[styles.dot, index === i && styles.activeDot]} />
         ))}
       </View>
     </View>
@@ -178,25 +150,25 @@ ${NEXT_PUBLIC_APP_URL}/properties/${property._id}`,
 const styles = StyleSheet.create({
   container: {
     height: 320,
-    backgroundColor: "#000",
+    backgroundColor: '#000',
   },
 
   image: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
 
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.25)",
+    backgroundColor: 'rgba(0,0,0,0.25)',
   },
 
   counter: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 18,
     right: 18,
 
-    backgroundColor: "rgba(0,0,0,0.45)",
+    backgroundColor: 'rgba(0,0,0,0.45)',
 
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -205,18 +177,18 @@ const styles = StyleSheet.create({
   },
 
   counterText: {
-    color: "#fff",
-    fontWeight: "700",
+    color: '#fff',
+    fontWeight: '700',
   },
 
   hint: {
-    position: "absolute",
+    position: 'absolute',
 
     bottom: 52,
 
-    alignSelf: "center",
+    alignSelf: 'center',
 
-    backgroundColor: "rgba(0,0,0,0.45)",
+    backgroundColor: 'rgba(0,0,0,0.45)',
 
     paddingHorizontal: 18,
     paddingVertical: 8,
@@ -225,18 +197,18 @@ const styles = StyleSheet.create({
   },
 
   hintText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 12,
   },
 
   pagination: {
-    position: "absolute",
+    position: 'absolute',
 
     bottom: 20,
 
-    alignSelf: "center",
+    alignSelf: 'center',
 
-    flexDirection: "row",
+    flexDirection: 'row',
   },
 
   dot: {
@@ -245,29 +217,28 @@ const styles = StyleSheet.create({
 
     borderRadius: 4,
 
-    backgroundColor: "rgba(255,255,255,.4)",
+    backgroundColor: 'rgba(255,255,255,.4)',
 
     marginHorizontal: 4,
   },
 
   activeDot: {
     width: 22,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   topBar: {
-    position: "absolute",
-    top: 50,
+    position: 'absolute',
     left: 18,
     right: 18,
 
     zIndex: 10,
 
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   rightButtons: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
 
   circleButton: {
@@ -276,10 +247,10 @@ const styles = StyleSheet.create({
 
     borderRadius: 23,
 
-    backgroundColor: "rgba(0,0,0,0.45)",
+    backgroundColor: 'rgba(0,0,0,0.45)',
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
 
     marginLeft: 10,
   },

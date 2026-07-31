@@ -189,6 +189,10 @@ const styles = StyleSheet.create({
     color: "#5B3DF5",
     fontWeight: "600",
     fontSize: 14,
+    borderWidth: 1,
+    padding: 2,
+    borderRadius: 5,
+    borderColor: "#5B3DF5"
   },
 
   message: {
