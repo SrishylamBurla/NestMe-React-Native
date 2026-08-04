@@ -11,7 +11,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useNavigation } from '@react-navigation/native';
-import skyline from '../assets/images/city-skyline.png';
+
 
 export default function Footer() {
   const navigation = useNavigation();
@@ -31,7 +31,7 @@ export default function Footer() {
   return (
     <>
       <LinearGradient colors={['#051033', '#0a273f', '#210716']}>
-        <Image source={skyline} style={styles.skyline} />
+        
         <View style={styles.container}>
           {/* Logo */}
           <View style={styles.brandRow}>
@@ -144,17 +144,6 @@ const styles = StyleSheet.create({
     paddingBottom: 160,
     position: 'relative',
     overflow: 'hidden',
-  },
-
-  skyline: {
-    position: 'absolute',
-    bottom: 30,
-    left: 0,
-    right: 0,
-    width: '100%',
-    height: 250,
-    resizeMode: 'cover',
-    opacity: 0.72,
   },
 
   logo: {

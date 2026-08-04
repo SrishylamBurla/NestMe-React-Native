@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
-  TouchableOpacity,
+  View
 } from "react-native";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -56,17 +56,18 @@ export default function BecomeAgentScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        style={styles.backButton}
-        activeOpacity={0.7}
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons
-          name="arrow-back"
-          size={24}
-          color="#FFFFFF"
-        />
-      </TouchableOpacity>
+      <View style={styles.header}>
+              <Ionicons
+                name="chevron-back"
+                size={26}
+                color="#fff"
+                onPress={() => navigation.goBack()}
+              />
+      
+              <Text style={styles.headerTitle}>Subscribe</Text>
+      
+              <View style={{ width: 26 }} />
+            </View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -116,6 +117,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#020617",
   },
 
+
+  header: {
+    height: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 18,
+  },
+
+  headerTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '700',
+  },
   loading: {
     flex: 1,
     justifyContent: "center",
@@ -152,16 +167,4 @@ const styles = StyleSheet.create({
     marginBottom: 35,
   },
 
-  backButton: {
-    width: 44,
-    height: 44,
-    marginTop: 10,
-    marginLeft: 16,
-    borderRadius: 22,
-    backgroundColor: "rgba(255,255,255,0.08)",
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.08)",
-  },
 });

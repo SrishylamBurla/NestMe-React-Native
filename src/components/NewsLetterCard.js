@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Image
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from '@react-native-vector-icons/ionicons';
-
+import skyline from '../assets/images/city-skyline.png';
 import { useSubscribeMutation } from '../services/subscribeApi';
+
 
 export default function NewsletterCard() {
   const [email, setEmail] = useState('');
@@ -64,8 +66,9 @@ export default function NewsletterCard() {
 
   return (
     <LinearGradient colors={['#051033', '#0A273F']} style={styles.card}>
+      <Image source={skyline} style={styles.skyline} />
       <View style={styles.icon}>
-        <Ionicons name="mail-open-outline" size={34} color="#fff" />
+        <Ionicons name="mail-open-outline" size={28} color="#fff" />
       </View>
 
       <Text style={styles.title}>Stay Updated</Text>
@@ -112,13 +115,27 @@ export default function NewsletterCard() {
 
 const styles = StyleSheet.create({
   card: {
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingBottom: 120,
+    paddingTop: 24,
     alignItems: 'center',
+    position: 'relative',
+    overflow: 'hidden',
   },
+  skyline: {
+      position: 'absolute',
+      bottom: 0,
+      left: 20,
+      right: 0,
+      width: '100%',
+      height: 150,
+      resizeMode: 'cover',
+      opacity: 0.72,
+    },
 
   icon: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     borderRadius: 35,
     backgroundColor: 'rgba(255,255,255,0.15)',
     justifyContent: 'center',
@@ -159,7 +176,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 52,
     borderRadius: 16,
-    backgroundColor: '#111827',
+    backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
   },
