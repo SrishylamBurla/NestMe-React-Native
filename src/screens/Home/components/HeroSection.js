@@ -10,6 +10,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import SearchBar from './SearchBar';
 import { useNavigation } from '@react-navigation/native';
 import { Fonts } from '../../../theme/fonts';
+// import skyline from '../../../assets/images/city-skyline.png';
+// import { Image } from 'react-native';
 
 const PURPOSES = [
   { label: 'Buy', value: 'sale' },
@@ -27,6 +29,17 @@ export default function HeroSection() {
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
+      {/* <Image
+        source={skyline}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+          height: 90,
+          opacity: 0.12,
+          backgroundColor: "transparent"
+        }}
+      /> */}
       <Text
         style={[
           styles.title,
@@ -83,16 +96,30 @@ export default function HeroSection() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingTop: 160,
+    paddingTop: 120,
     paddingBottom: 60,
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
+    overflow: 'hidden',
+    position: 'relative',
   },
+  skyline: {
+    position: 'absolute',
+    bottom: 0,
+    left: 15,
+    right: 0,
+    width: '100%',
+    height: 90,
+    resizeMode: 'stretch',
+    opacity: 0.12,
+  },
+
+  
 
   title: {
     color: '#fff',
-    fontSize: 40,
-    fontWeight: '700',
+    fontSize: 35,
+    fontWeight: '800',
     textAlign: 'center',
   },
 
@@ -115,7 +142,7 @@ const styles = StyleSheet.create({
   },
 
   searchInput: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#111',
   },
 
@@ -126,9 +153,11 @@ const styles = StyleSheet.create({
   },
 
   chip: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 18,
-    paddingVertical: 10,
+    backgroundColor: '#eee',
+    borderWidth: 0.7,
+
+    paddingHorizontal: 15,
+    paddingVertical: 6,
     borderRadius: 30,
     marginHorizontal: 6,
   },
@@ -138,7 +167,7 @@ const styles = StyleSheet.create({
   },
 
   chipText: {
-    color: '#111',
+    color: '#000',
     fontWeight: '700',
     fontSize: 14,
   },

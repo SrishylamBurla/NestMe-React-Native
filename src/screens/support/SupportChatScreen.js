@@ -110,7 +110,10 @@ export default function SupportChatScreen({ navigation, route }) {
             ref={flatListRef}
             data={messages}
             keyExtractor={item => item._id}
-            renderItem={({ item }) => <ChatBubble message={item} />}
+            renderItem={({ item }) => {
+              console.log(JSON.stringify(item, null, 2));
+              return <ChatBubble message={item} />;
+            }}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.chatContent}
             refreshControl={

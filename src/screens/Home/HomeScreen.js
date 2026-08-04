@@ -12,6 +12,7 @@ import NewsLetterCard from '../../components/NewsLetterCard';
 import BrowsePropertyType from './components/BrowsePropertyType';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+
 export default function HomeScreen() {
   const { data } = useGetMeQuery();
 

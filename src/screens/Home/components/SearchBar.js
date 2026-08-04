@@ -39,11 +39,10 @@ const styles = StyleSheet.create({
   container: {
     height: 46,
     backgroundColor: "#FFFFFF",
-    borderRadius: 18,
+    borderRadius: 25,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 18,
-    borderWidth: 1,
     borderColor: "#E5E7EB",
 
     shadowColor: "#000",
