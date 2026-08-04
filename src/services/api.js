@@ -14,6 +14,8 @@ export const api = createApi({
     },
   }),
 
+
+
   tagTypes: [
     "User",
     "Property",

@@ -58,23 +58,23 @@ export async function startRazorpayPayment({
       navigation.replace('AgentDashboard');
     }
   } catch (err) {
-  console.error("Razorpay Payment Error:", err);
+    console.error('Razorpay Payment Error:', err);
 
-  if (err?.code === 0) {
-    Toast.show({
-      type: "info",
-      text1: "Payment Cancelled",
-      text2: "You cancelled the payment.",
-    });
-  } else {
-    Toast.show({
-      type: "error",
-      text1: "Payment Failed",
-      text2:
-        err?.description ||
-        err?.data?.message ||
-        "Something went wrong. Please try again.",
-    });
+    if (err?.code === 0) {
+      Toast.show({
+        type: 'info',
+        text1: 'Payment Cancelled',
+        text2: 'You cancelled the payment.',
+      });
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Payment Failed',
+        text2:
+          err?.description ||
+          err?.data?.message ||
+          'Something went wrong. Please try again.',
+      });
+    }
   }
-}
 }
