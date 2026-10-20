@@ -30,7 +30,7 @@ export default function Footer() {
   };
   return (
     <>
-      <LinearGradient colors={['#051033', '#0a273f', '#210716']}>
+      <LinearGradient colors={['#051033', '#0a273f', '#000']}>
         
         <View style={styles.container}>
           {/* Logo */}
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: '800',
     color: '#FFFFFF',
+    fontFamily: "Sans"
   },
 
   domain: {
@@ -246,9 +247,9 @@ const styles = StyleSheet.create({
   },
 
   heading: {
-    color: '#FFFFFF',
+    color: '#f3f4f5',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '700', 
     marginBottom: 14,
   },
 

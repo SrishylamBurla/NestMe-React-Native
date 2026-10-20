@@ -9,8 +9,6 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import SearchBar from './SearchBar';
 import { useNavigation } from '@react-navigation/native';
-import { Fonts } from '../../../theme/fonts';
-// import skyline from '../../../assets/images/city-skyline.png';
 // import { Image } from 'react-native';
 
 const PURPOSES = [
@@ -41,13 +39,7 @@ export default function HeroSection() {
         }}
       /> */}
       <Text
-        style={[
-          styles.title,
-          {
-            fontFamily: Fonts.Manrope.extrabold,
-          },
-        ]}
-      >
+        style={styles.title}>
         Find Your Perfect Property
       </Text>
       {/* <Text style={{
@@ -103,24 +95,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
   },
-  skyline: {
-    position: 'absolute',
-    bottom: 0,
-    left: 15,
-    right: 0,
-    width: '100%',
-    height: 90,
-    resizeMode: 'stretch',
-    opacity: 0.12,
-  },
-
-  
 
   title: {
     color: '#fff',
-    fontSize: 35,
-    fontWeight: '800',
     textAlign: 'center',
+    fontSize: 40,
+    fontWeight: 800,
+    fontFamily: "Sans-serif"
+    // fontFamily: "GreatVibes-Regular",
   },
 
   subtitle: {

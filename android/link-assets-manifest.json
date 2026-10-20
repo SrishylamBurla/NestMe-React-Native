@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/GreatVibes-Regular.ttf",
+      "sha1": "1c5136fcb8820617e2209f75f7f0a413b34be410"
+    },
+    {
+      "path": "assets/fonts/OFL.txt",
+      "sha1": "9c529091874b13d35d0fee0b9963f2542ef93ada"
+    }
+  ]
+}

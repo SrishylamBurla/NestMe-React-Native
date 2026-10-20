@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -6,18 +6,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import Ionicons from "@react-native-vector-icons/ionicons";
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Ionicons from '@react-native-vector-icons/ionicons';
 
 import {
   useGetSavedPropertiesQuery,
   useToggleSavePropertyMutation,
-} from "../services/savedApi";
+} from '../services/savedApi';
 
-export default function VerticalPropertyCard({
-  property,
-}) {
+export default function VerticalPropertyCard({ property }) {
   const navigation = useNavigation();
   const { data } = useGetSavedPropertiesQuery();
 
@@ -25,24 +23,21 @@ export default function VerticalPropertyCard({
     useToggleSavePropertyMutation();
 
   const goToDetails = () => {
-    navigation.navigate("PropertyDetails", {
+    navigation.navigate('PropertyDetails', {
       id: property._id,
     });
-
   };
 
   const isSaved =
-    data?.saved?.some(
-      (item) => item.property._id === property._id
-    ) || false;
+    data?.saved?.some(item => item.property._id === property._id) || false;
 
-  const handleSave = async (e) => {
+  const handleSave = async e => {
     e?.stopPropagation?.();
 
     try {
       await toggleSaveProperty(property._id).unwrap();
     } catch (err) {
-      console.error("Save Property Error:", err);
+      console.error('Save Property Error:', err);
     }
   };
 
@@ -59,7 +54,7 @@ export default function VerticalPropertyCard({
           source={{
             uri:
               property.images?.[0]?.url ||
-              "https://via.placeholder.com/600x400",
+              'https://via.placeholder.com/600x400',
           }}
           style={styles.image}
         />
@@ -68,7 +63,7 @@ export default function VerticalPropertyCard({
 
         <View style={styles.priceChip}>
           <Text style={styles.price}>
-            ₹{" "}
+            ₹{' '}
             {property.priceValue
               ? property.priceValue.toLocaleString()
               : property.priceLabel}
@@ -84,23 +79,12 @@ export default function VerticalPropertyCard({
           disabled={saving}
         >
           {saving ? (
-            <ActivityIndicator
-              size="small"
-              color="#EF4444"
-            />
+            <ActivityIndicator size="small" color="#EF4444" />
           ) : (
             <Ionicons
-              name={
-                isSaved
-                  ? "heart"
-                  : "heart-outline"
-              }
+              name={isSaved ? 'heart' : 'heart-outline'}
               size={26}
-              color={
-                isSaved
-                  ? "#EF4444"
-                  : "#111827"
-              }
+              color={isSaved ? '#EF4444' : '#111827'}
             />
           )}
         </TouchableOpacity>
@@ -109,11 +93,11 @@ export default function VerticalPropertyCard({
 
         <View style={styles.listingChip}>
           <Text style={styles.listingText}>
-            {property.listingType === "sale"
-              ? "For Sale"
-              : property.listingType === "rent"
-                ? "For Rent"
-                : "For Lease"}
+            {property.listingType === 'sale'
+              ? 'For Sale'
+              : property.listingType === 'rent'
+              ? 'For Rent'
+              : 'For Lease'}
           </Text>
         </View>
       </View>
@@ -121,24 +105,14 @@ export default function VerticalPropertyCard({
       {/* ================= CONTENT ================= */}
 
       <View style={styles.content}>
-        <Text
-          numberOfLines={1}
-          style={styles.title}
-        >
+        <Text numberOfLines={1} style={styles.title}>
           {property.title}
         </Text>
 
         <View style={styles.locationRow}>
-          <Ionicons
-            name="location-outline"
-            size={18}
-            color="#64748B"
-          />
+          <Ionicons name="location-outline" size={18} color="#64748B" />
 
-          <Text
-            numberOfLines={1}
-            style={styles.location}
-          >
+          <Text numberOfLines={1} style={styles.location}>
             {property.city}, {property.state}
           </Text>
         </View>
@@ -149,54 +123,27 @@ export default function VerticalPropertyCard({
 
         <View style={styles.footer}>
           <View style={styles.meta}>
-            <Ionicons
-              name="bed-outline"
-              size={18}
-              color="#475569"
-            />
+            <Ionicons name="bed-outline" size={18} color="#475569" />
 
-            <Text style={styles.metaText}>
-              {property.beds || 0}
-            </Text>
+            <Text style={styles.metaText}>{property.beds || 0}</Text>
           </View>
 
           <View style={styles.meta}>
-            <Ionicons
-              name="water-outline"
-              size={18}
-              color="#475569"
-            />
+            <Ionicons name="water-outline" size={18} color="#475569" />
 
-            <Text style={styles.metaText}>
-              {property.baths || 0}
-            </Text>
+            <Text style={styles.metaText}>{property.baths || 0}</Text>
           </View>
 
           <View style={styles.meta}>
-            <Ionicons
-              name="resize-outline"
-              size={18}
-              color="#475569"
-            />
+            <Ionicons name="resize-outline" size={18} color="#475569" />
 
-            <Text style={styles.metaText}>
-              {property.areaSqFt || 0} ft²
-            </Text>
+            <Text style={styles.metaText}>{property.areaSqFt || 0} ft²</Text>
           </View>
 
-          <TouchableOpacity
-            style={styles.detailsButton}
-            onPress={goToDetails}
-          >
-            <Text style={styles.detailsText}>
-              View Details
-            </Text>
+          <TouchableOpacity style={styles.detailsButton} onPress={goToDetails}>
+            <Text style={styles.detailsText}>View Details</Text>
 
-            <Ionicons
-              name="chevron-forward"
-              size={18}
-              color="#FFFFFF"
-            />
+            <Ionicons name="chevron-forward" size={18} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
       </View>
@@ -206,15 +153,15 @@ export default function VerticalPropertyCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
 
     borderRadius: 24,
 
-    overflow: "hidden",
+    overflow: 'hidden',
 
     marginBottom: 22,
 
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.08,
     shadowRadius: 20,
     shadowOffset: {
@@ -227,21 +174,21 @@ const styles = StyleSheet.create({
 
   imageContainer: {
     height: 235,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: '#F3F4F6',
   },
 
   image: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
 
   priceChip: {
-    position: "absolute",
+    position: 'absolute',
 
     top: 18,
     left: 18,
 
-    backgroundColor: "#111827",
+    backgroundColor: '#111827',
 
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -250,13 +197,13 @@ const styles = StyleSheet.create({
   },
 
   price: {
-    color: "#FFFFFF",
-    fontWeight: "700",
+    color: '#FFFFFF',
+    fontWeight: '700',
     fontSize: 17,
   },
 
   favoriteButton: {
-    position: "absolute",
+    position: 'absolute',
 
     top: 18,
     right: 18,
@@ -266,12 +213,12 @@ const styles = StyleSheet.create({
 
     borderRadius: 26,
 
-    backgroundColor: "rgba(255,255,255,0.96)",
+    backgroundColor: 'rgba(255,255,255,0.96)',
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
 
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.18,
     shadowRadius: 8,
     shadowOffset: {
@@ -283,12 +230,12 @@ const styles = StyleSheet.create({
   },
 
   listingChip: {
-    position: "absolute",
+    position: 'absolute',
 
     bottom: 18,
     right: 18,
 
-    backgroundColor: "#10B981",
+    backgroundColor: '#10B981',
 
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -297,8 +244,8 @@ const styles = StyleSheet.create({
   },
 
   listingText: {
-    color: "#FFFFFF",
-    fontWeight: "700",
+    color: '#FFFFFF',
+    fontWeight: '700',
     fontSize: 13,
   },
 
@@ -308,13 +255,13 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 20,
-    fontWeight: "700",
-    color: "#0F172A",
+    fontWeight: '700',
+    color: '#0F172A',
   },
 
   locationRow: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
 
     marginTop: 8,
   },
@@ -324,25 +271,25 @@ const styles = StyleSheet.create({
 
     marginLeft: 6,
 
-    color: "#64748B",
+    color: '#64748B',
 
     fontSize: 15,
   },
 
   divider: {
     height: 1,
-    backgroundColor: "#E2E8F0",
+    backgroundColor: '#E2E8F0',
     marginVertical: 18,
   },
 
   footer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   meta: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
 
     marginRight: 18,
   },
@@ -350,21 +297,21 @@ const styles = StyleSheet.create({
   metaText: {
     marginLeft: 5,
 
-    color: "#334155",
+    color: '#334155',
 
     fontSize: 14,
 
-    fontWeight: "600",
+    fontWeight: '600',
   },
 
   detailsButton: {
-    marginLeft: "auto",
+    marginLeft: 'auto',
 
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
 
-    backgroundColor: "#111827",
+    backgroundColor: '#111827',
 
     height: 42,
 
@@ -374,8 +321,8 @@ const styles = StyleSheet.create({
   },
 
   detailsText: {
-    color: "#FFFFFF",
-    fontWeight: "700",
-    marginRight: 5,
+    color: '#FFFFFF',
+    fontWeight: '700',
+    marginRight: 2,
   },
 });
